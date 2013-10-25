@@ -31,7 +31,7 @@ public class PolarAzimuthalHelperTests
     public void Generates_North_Pole()
     {
         var northPole = new Vector3(0.0f, 0.0f, 1.0f);
-        Assert.AreEqual(northPole, helper.NormalizedGridPoints[0]);
+        Assert.IsTrue(TestTools.ApproxEquals(northPole, helper.NormalizedGridPoints[0], 0.01f));
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ public class PolarAzimuthalHelperTests
     public void Generates_South_Pole()
     {
         var southPole = new Vector3(0.0f, 0.0f, -1.0f);
-        Assert.AreEqual(southPole, helper.NormalizedGridPoints[25]);
+        Assert.IsTrue(TestTools.ApproxEquals(southPole, helper.NormalizedGridPoints[25], 0.01f));
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class PolarAzimuthalHelperTests
         var z = Mathf.Cos(Mathf.PI / 4);
 
         var expected45N45E = new Vector3(x, y, z);
-        Assert.IsTrue(expected45N45E == helper.NormalizedGridPoints[2]);
+        Assert.IsTrue(TestTools.ApproxEquals(expected45N45E, helper.NormalizedGridPoints[2], 0.001f));
     }
 
     [TestMethod]

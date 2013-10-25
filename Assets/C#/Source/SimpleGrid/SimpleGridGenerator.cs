@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class SimpleGridGenerator : IGridGenerator
 {
-    public ISimpleGeneratedNode[] Nodes { get; private set; }
+    public INode[] Nodes { get; private set; }
     public Vector3[] MeshVertices { get; private set; }
     public int[] MeshTriangles { get; private set; }
 
@@ -16,7 +16,7 @@ public class SimpleGridGenerator : IGridGenerator
     public SimpleGridGenerator(float radius, float desiredResolution)
     {
         nodeHelper = new PolarAzimuthalHelper(desiredResolution / radius);
-        vertexHelper = new PolarAzimuthalHelper(2*(nodeHelper.NumberOfLatitudes - 1), 2*nodeHelper.NumberOfLongitudes);
+        vertexHelper = new PolarAzimuthalHelper(2*(nodeHelper.NumberOfLatitudes - 1) + 1, 2*nodeHelper.NumberOfLongitudes);
 
         GenerateNodes(radius);
         GenerateVertices(radius);
@@ -25,14 +25,13 @@ public class SimpleGridGenerator : IGridGenerator
 
     private void GenerateNodes(float radius)
     {
-        Nodes = new ISimpleGeneratedNode[nodeHelper.NormalizedGridPoints.Length];
+        Nodes = new INode[nodeHelper.NormalizedGridPoints.Length];
 
         Vector3[] nodeDirections = nodeHelper.NormalizedGridPoints;
 
         for (int i = 0; i < nodeDirections.Length; i++)
         {
-            Vector3 nodePosition = radius * nodeDirections[i];
-            Nodes[i] = new SimpleNode(i) { Position = nodePosition };
+            Nodes[i] = new SimpleNode(i) { Direction = nodeDirections[i] };
         }
     }
 
