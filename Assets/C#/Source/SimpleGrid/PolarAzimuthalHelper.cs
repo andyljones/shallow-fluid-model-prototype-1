@@ -17,7 +17,17 @@ public class PolarAzimuthalHelper
         GenerateGridPoints();
     }
 
-#region Methods used by constructor
+    public PolarAzimuthalHelper(int numberOfLatitudes, int numberOfLongitudes)
+    {
+        NumberOfLatitudes = numberOfLatitudes;
+        NumberOfLongitudes = numberOfLongitudes;
+
+        CalculateNumberOfGridPoints();
+
+        GenerateGridPoints();
+    }
+
+#region Methods used by constructors
     private void GenerateGridPoints()
     {
         NormalizedGridPoints = new Vector3[NumberOfGridPoints];
@@ -67,6 +77,8 @@ public class PolarAzimuthalHelper
         NumberOfGridPoints = NumberOfLongitudes * (NumberOfLatitudes - 2) + 2;
     }
 #endregion
+
+
 
     // Offset an index by a given number of gridpoints running north-south and a given number of gridpoints running east-west. 
     public int Offset(int index, int polarOffset, int azimuthalOffset)

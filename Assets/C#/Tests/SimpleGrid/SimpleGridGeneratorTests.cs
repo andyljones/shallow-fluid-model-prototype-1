@@ -49,5 +49,43 @@ public class SimpleGridGeneratorTests
         var expected45N45E = new SimpleNode(2) { Position = new Vector3(x, y, z) };
         Assert.AreEqual(expected45N45E, sgg.Nodes[2]);
     }
+
+    [TestMethod]
+    public void Number_Of_Mesh_Vertices_Is_Correct()
+    {
+        int expectedNumberOfMeshVertices = 98;
+        Assert.AreEqual(expectedNumberOfMeshVertices, sgg.MeshVertices.Length);
+    }
+
+    [TestMethod]
+    public void Mesh_Vertices_Are_All_Non_Null()
+    {
+        CollectionAssert.AllItemsAreNotNull(sgg.MeshVertices);
+    }
+
+    [TestMethod]
+    public void Mesh_Vertex_North_Pole_Is_Correct()
+    {
+        var northPoleVertex = new Vector3(0, 0, 6000);
+        Assert.AreEqual(northPoleVertex, sgg.MeshVertices[0]);
+    }
+
+    [TestMethod]
+    public void Mesh_Vertex_South_Pole_Is_Correct()
+    {
+        var southPoleVertex = new Vector3(0, 0, -6000);
+        Assert.AreEqual(southPoleVertex, sgg.MeshVertices[97]);
+    }
+
+    [TestMethod]
+    public void Mesh_Vertex_67N22E_Is_Correct()
+    {
+        var x = 6000 * Mathf.Sin(Mathf.PI / 8) * Mathf.Cos(Mathf.PI / 8);
+        var y = 6000 * Mathf.Sin(Mathf.PI / 8) * Mathf.Sin(Mathf.PI / 8);
+        var z = 6000 * Mathf.Cos(Mathf.PI / 8);
+
+        var expected67N22E = new SimpleNode(2) { Position = new Vector3(x, y, z) };
+        Assert.AreEqual(expected67N22E, sgg.Nodes[2]);
+    }
 }
 

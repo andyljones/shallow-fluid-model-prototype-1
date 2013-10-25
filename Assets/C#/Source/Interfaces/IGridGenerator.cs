@@ -2,7 +2,9 @@ using UnityEngine;
 
 public interface IGridGenerator
 {
-    INode[] Nodes { get; }
+    ISimpleGeneratedNode[] Nodes { get; }
+    
+    Vector3[] MeshVertices { get; }
 
     int[] MeshTriangles { get; }
 
