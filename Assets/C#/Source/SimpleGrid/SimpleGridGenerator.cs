@@ -1,28 +1,22 @@
+using UnityEditor;
 using UnityEngine;
 
 public class SimpleGridGenerator : IGridGenerator
 {
     public INode[] Nodes { get; private set; }
 
-    public UnityEngine.Vector3[] MeshVertices
-    {
-        get { throw new System.NotImplementedException(); }
-    }
-
-    public int[] MeshTriangles
-    {
-        get { throw new System.NotImplementedException(); }
-    }
+    public int[] MeshTriangles { get; private set; }
 
     private PolarAzimuthalHelper helper;
 
     public SimpleGridGenerator(float radius, float desiredResolution)
     {
-        this.helper = new PolarAzimuthalHelper(desiredResolution / radius);
-        this.Nodes = GenerateNodes(radius);
+        helper = new PolarAzimuthalHelper(desiredResolution / radius);
+
+        GenerateNodes(radius);
     }
 
-    private INode[] GenerateNodes(float radius)
+    private void GenerateNodes(float radius)
     {
         Nodes = new INode[helper.NormalizedGridPoints.Length];
 
@@ -33,7 +27,5 @@ public class SimpleGridGenerator : IGridGenerator
             Vector3 nodePosition = radius * nodeDirections[i];
             Nodes[i] = new SimpleNode(i) { Position = nodePosition };
         }
-
-        return Nodes;
     }
 }

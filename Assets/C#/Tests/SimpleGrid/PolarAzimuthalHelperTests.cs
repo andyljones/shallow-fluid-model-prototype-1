@@ -1,11 +1,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UnityEditor;
 using UnityEngine;
-using System;
+
 
 [TestClass]
 public class PolarAzimuthalHelperTests
 {
-    PolarAzimuthalHelper helper;
+    public PolarAzimuthalHelper helper;
 
     [TestInitialize]
     public void Create_Polar_Azimuthal_Helper_With_45_Degree_Resolution()
@@ -62,5 +63,37 @@ public class PolarAzimuthalHelperTests
     public void Fills_Points_Array()
     {
         CollectionAssert.AllItemsAreNotNull(helper.NormalizedGridPoints);
+    }
+
+    [TestMethod]
+    public void Northern_Offset_Of_Highest_Latitiude_Returns_North_Pole()
+    {
+        int indexOf45N45E = 2;
+        Assert.AreEqual(0, helper.Offset(indexOf45N45E, -1, 0));
+        Assert.AreEqual(0, helper.Offset(indexOf45N45E, -1, 17));
+    }
+
+    [TestMethod]
+    public void Southern_Offset_Of_Lowest_Latitude_Returns_South_Pole()
+    {
+        int indexOf45S45W = 23;
+        Assert.AreEqual(25, helper.Offset(indexOf45S45W, 1, 0));
+        Assert.AreEqual(25, helper.Offset(indexOf45S45W, 1, -14));
+    }
+
+    [TestMethod]
+    public void North_Eastern_Offset_Of_Midlatitudes_Is_Correct()
+    {
+        int indexOf0N45E = 10;
+        int indexOf45N90E = 3;
+        Assert.AreEqual(indexOf45N90E, helper.Offset(indexOf0N45E, -1, 1));
+    }
+
+    [TestMethod]
+    public void South_Western_Offset_Across_Prime_Meridian_Is_Correct()
+    {
+        int indexOf0N0E = 9;
+        int indexOf45S45W = 24;
+        Assert.AreEqual(indexOf45S45W, helper.Offset(indexOf0N0E, 1, -1));
     }
 }

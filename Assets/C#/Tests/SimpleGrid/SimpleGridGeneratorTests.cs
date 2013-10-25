@@ -4,7 +4,7 @@ using UnityEngine;
 [TestClass]
 public class SimpleGridGeneratorTests
 {
-    IGridGenerator sgg;
+    public IGridGenerator sgg;
 
     [TestInitialize]
     public void Create_6000k_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
@@ -40,7 +40,7 @@ public class SimpleGridGeneratorTests
 
     [TestMethod]
     // Need to override SimpleNode's equals to get this to work.
-    public void Generates_45N45E_Correctly()
+    public void Node_45N45E_Is_Correct()
     {
         var x = 6000 * Mathf.Sin(Mathf.PI / 4) * Mathf.Cos(Mathf.PI / 4);
         var y = 6000 * Mathf.Sin(Mathf.PI / 4) * Mathf.Sin(Mathf.PI / 4);
