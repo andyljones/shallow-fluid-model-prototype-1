@@ -8,9 +8,9 @@ public class SimpleGridGeneratorTests
     public IGridGenerator<SimpleNode> sgg;
 
     [TestInitialize]
-    public void Create_6000k_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
+    public void Create_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
     {
-        sgg = new SimpleGridGenerator<SimpleNode>(6000, 6000 * Mathf.PI / 4);
+        sgg = new SimpleGridGenerator<SimpleNode>(5, 8);
     }
 
     [TestMethod]

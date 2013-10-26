@@ -1,4 +1,4 @@
-using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
 
 public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
@@ -6,22 +6,29 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
 {
     public TNode[] Nodes { get; private set; }
 
+    private Vector3[] nodeGrid;
+    private Vector3[] vertexGrid;
     private PolarAzimuthalHelper nodeHelper;
     private PolarAzimuthalHelper vertexHelper;
 
-    public SimpleGridGenerator(float radius, float desiredResolution)
+    public SimpleGridGenerator(int numberOfLatitudes, int numberOfLongitudes)
     {
-        nodeHelper = new PolarAzimuthalHelper(desiredResolution / radius);
-        vertexHelper = new PolarAzimuthalHelper(2*(nodeHelper.NumberOfLatitudes - 1) + 1, 2*nodeHelper.NumberOfLongitudes);
+        var nodeGenerator = new PolarAzimuthalGenerator(numberOfLatitudes, numberOfLongitudes);
+        nodeGrid = nodeGenerator.NormalizedGridPoints;
+        nodeHelper = nodeGenerator.NavigationHelper;
 
-        GenerateNodes(radius);
+        var vertexGenerator = new PolarAzimuthalGenerator(2*(nodeHelper.NumberOfLatitudes - 1) + 1, 2*nodeHelper.NumberOfLongitudes);
+        vertexGrid = vertexGenerator.NormalizedGridPoints;
+        vertexHelper = vertexGenerator.NavigationHelper;
+
+        GenerateNodes();
     }
 
-    private void GenerateNodes(float radius)
+    private void GenerateNodes()
     {
-        Nodes = new TNode[nodeHelper.NormalizedGridPoints.Length];
+        Nodes = new TNode[nodeGrid.Length];
 
-        Vector3[] nodeDirections = nodeHelper.NormalizedGridPoints;
+        Vector3[] nodeDirections = nodeGrid;
         BoundaryGenerator boundaryGenerator = new BoundaryGenerator(nodeHelper, vertexHelper);
 
         for (int nodeIndex = 0; nodeIndex < nodeDirections.Length; nodeIndex++)

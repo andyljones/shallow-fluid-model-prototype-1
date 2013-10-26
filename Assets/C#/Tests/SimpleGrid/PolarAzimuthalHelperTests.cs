@@ -6,13 +6,14 @@ using UnityEngine;
 [TestClass]
 public class PolarAzimuthalHelperTests
 {
-    public PolarAzimuthalHelper helper;
+    private PolarAzimuthalHelper helper;
+    private PolarAzimuthalGenerator generator;
 
     [TestInitialize]
-    public void Create_Polar_Azimuthal_Helper_With_45_Degree_Resolution()
+    public void Create_Polar_Azimuthal_Helper_With_Five_Latitudes_And_Eight_Longitudes()
     {
-        float desiredAngularResolution = Mathf.PI / 4;
-        helper = new PolarAzimuthalHelper(desiredAngularResolution);
+        generator = new PolarAzimuthalGenerator(5, 8);
+        helper = generator.NavigationHelper;
     }
 
     [TestMethod]
@@ -31,21 +32,21 @@ public class PolarAzimuthalHelperTests
     public void Generates_North_Pole()
     {
         var northPole = new Vector3(0.0f, 0.0f, 1.0f);
-        Assert.IsTrue(TestTools.ApproxEquals(northPole, helper.NormalizedGridPoints[0], 0.01f));
+        Assert.IsTrue(TestTools.ApproxEquals(northPole, generator.NormalizedGridPoints[0], 0.01f));
     }
 
     [TestMethod]
     public void Has_The_Right_Number_Of_Points()
     {
         var expectedNumberOfGridPoints = 26;
-        Assert.AreEqual(expectedNumberOfGridPoints, helper.NormalizedGridPoints.Length);
+        Assert.AreEqual(expectedNumberOfGridPoints, generator.NormalizedGridPoints.Length);
     }
 
     [TestMethod]
     public void Generates_South_Pole()
     {
         var southPole = new Vector3(0.0f, 0.0f, -1.0f);
-        Assert.IsTrue(TestTools.ApproxEquals(southPole, helper.NormalizedGridPoints[25], 0.01f));
+        Assert.IsTrue(TestTools.ApproxEquals(southPole, generator.NormalizedGridPoints[25], 0.01f));
     }
 
     [TestMethod]
@@ -56,13 +57,13 @@ public class PolarAzimuthalHelperTests
         var z = Mathf.Cos(Mathf.PI / 4);
 
         var expected45N45E = new Vector3(x, y, z);
-        Assert.IsTrue(TestTools.ApproxEquals(expected45N45E, helper.NormalizedGridPoints[2], 0.001f));
+        Assert.IsTrue(TestTools.ApproxEquals(expected45N45E, generator.NormalizedGridPoints[2], 0.001f));
     }
 
     [TestMethod]
     public void Fills_Points_Array()
     {
-        CollectionAssert.AllItemsAreNotNull(helper.NormalizedGridPoints);
+        CollectionAssert.AllItemsAreNotNull(generator.NormalizedGridPoints);
     }
 
     [TestMethod]
