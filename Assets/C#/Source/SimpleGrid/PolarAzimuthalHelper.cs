@@ -83,8 +83,8 @@ public class PolarAzimuthalHelper
     // Offset an index by a given number of gridpoints running north-south and a given number of gridpoints running east-west. 
     public int Offset(int index, int polarOffset, int azimuthalOffset)
     {
-        int polarIndex = (index - 1)/NumberOfLongitudes + 1;
-        int azimuthalIndex = index - ((polarIndex - 1) * NumberOfLongitudes + 1);
+        int polarIndex = PolarIndexOf(index);
+        int azimuthalIndex = AzimuthalIndexOf(index);
 
         int offsetIndex;
 
@@ -104,6 +104,69 @@ public class PolarAzimuthalHelper
         }
 
         return offsetIndex;
+    }
+
+    public int PolarIndexOf(int index)
+    {
+        int polarIndex;
+
+        if (index == 0)
+        {
+            polarIndex = 0;
+        }
+        else if (index == NumberOfGridPoints - 1)
+        {
+            polarIndex = NumberOfLatitudes - 1;
+        }
+        else
+        {
+            polarIndex = (index - 1) / NumberOfLongitudes + 1;
+        }
+
+        return polarIndex;
+    }
+
+    public int AzimuthalIndexOf(int index)
+    {
+        int azimuthalIndex;
+
+        if (index == 0)
+        {
+            azimuthalIndex = 0;
+        }
+        else if (index == NumberOfGridPoints - 1)
+        {
+            azimuthalIndex = 0;
+        }
+        else
+        {
+            azimuthalIndex = MathMod(index - 1, NumberOfLongitudes);    
+        }
+
+        return azimuthalIndex;
+    }
+
+    public int IndexOf(int polarIndex, int azimuthalIndex)
+    {
+        int index;
+
+        if (polarIndex <= 0)
+        {
+            index = 0;
+        }
+        else if (polarIndex >= NumberOfLatitudes - 1)
+        {
+            index = NumberOfGridPoints - 1;
+        }
+        else
+        {
+            int indexAtStartOfLatitude = 1 + (polarIndex - 1)*NumberOfLongitudes;
+            int normalizedAzimuthalCoordinate = MathMod(azimuthalIndex, NumberOfLongitudes);
+
+            index = indexAtStartOfLatitude + normalizedAzimuthalCoordinate;
+        }
+
+        return index;
     }
 
     // This is an actual modulo operator, as opposed to the remainder operator % represents.

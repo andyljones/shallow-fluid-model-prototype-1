@@ -96,4 +96,81 @@ public class PolarAzimuthalHelperTests
         int indexOf45S45W = 24;
         Assert.AreEqual(indexOf45S45W, helper.Offset(indexOf0N0E, 1, -1));
     }
+
+    [TestMethod]
+    public void Polar_Index_Of_Works_Correctly_At_North_Pole()
+    {
+        int expectedPolarIndex = 0;
+        Assert.AreEqual(expectedPolarIndex, helper.PolarIndexOf(0));
+    }
+
+    [TestMethod]
+    public void Polar_Index_Of_Works_Correctly_At_South_Pole()
+    {
+        int expectedPolarIndex = 4;
+        Assert.AreEqual(expectedPolarIndex, helper.PolarIndexOf(25));
+    }
+
+    [TestMethod]
+    public void Polar_Index_Of_Works_Correctly_At_45N45E()
+    {
+        int expectedPolarIndex = 1;
+        Assert.AreEqual(expectedPolarIndex, helper.PolarIndexOf(2));
+    }
+
+    [TestMethod]
+    public void Azimuthal_Index_Of_Works_Correctly_At_North_Pole()
+    {
+        int expectedAzimuthalIndex = 0;
+        Assert.AreEqual(expectedAzimuthalIndex, helper.AzimuthalIndexOf(0));
+    }
+
+    [TestMethod]
+    public void Azimuthal_Index_Of_Works_Correctly_At_South_Pole()
+    {
+        int expectedAzimuthalIndex = 0;
+        Assert.AreEqual(expectedAzimuthalIndex, helper.AzimuthalIndexOf(25));
+    }
+
+    [TestMethod]
+    public void Azimuthal_Index_Of_Works_Correctly_At_45N45E()
+    {
+        int expectedAzimuthalIndex = 1;
+        Assert.AreEqual(expectedAzimuthalIndex, helper.AzimuthalIndexOf(2));
+    }
+
+    [TestMethod]
+    public void Azimuthal_Index_Of_Works_Correctly_At_0N90E()
+    {
+        int expectedAzimuthalIndex = 2;
+        Assert.AreEqual(expectedAzimuthalIndex, helper.AzimuthalIndexOf(11));
+    }
+
+    [TestMethod]
+    public void Index_Of_Works_Correctly_At_North_Pole()
+    {
+        int expectedIndex = 0;
+        Assert.AreEqual(expectedIndex, helper.IndexOf(0, -12));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(0, 0));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(0, 7));
+    }
+
+    [TestMethod]
+    public void Index_Of_Works_Correctly_At_South_Pole()
+    {
+        int expectedIndex = 25;
+        Assert.AreEqual(expectedIndex, helper.IndexOf(4, -12));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(4, 0));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(4, 7));
+    }
+
+    [TestMethod]
+    public void Index_Of_Works_Correctly_At_45N45E()
+    {
+        int expectedIndex = 2;
+        Assert.AreEqual(expectedIndex, helper.IndexOf(1, -7));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(1, 1));
+        Assert.AreEqual(expectedIndex, helper.IndexOf(1, 9));
+    }
+    
 }

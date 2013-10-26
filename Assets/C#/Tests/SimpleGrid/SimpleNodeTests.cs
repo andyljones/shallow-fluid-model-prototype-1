@@ -10,7 +10,7 @@ public class SimpleNodeTests
     [TestInitialize]
     public void Create_Simple_Node_At_North_Pole()
     {
-        node = new SimpleNode(4) {Direction = new Vector3(0, 0, 1)};
+        node = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
     }
 
 }

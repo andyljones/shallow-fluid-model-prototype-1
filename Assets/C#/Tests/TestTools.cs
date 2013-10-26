@@ -18,7 +18,6 @@ public static class TestTools
     {
         bool areEqual = lhs.Index == rhs.Index &&
                         ApproxEquals(lhs.Radius, rhs.Radius, tolerance) &&
-                        ApproxEquals(lhs.Height, rhs.Height, tolerance) &&
                         ApproxEquals(lhs.Direction.x, rhs.Direction.x, tolerance) &&
                         ApproxEquals(lhs.Direction.y, rhs.Direction.y, tolerance) &&
                         ApproxEquals(lhs.Direction.z, rhs.Direction.z, tolerance);

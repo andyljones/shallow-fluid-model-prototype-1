@@ -6,7 +6,9 @@ public interface INode
 
     float Radius { get; }
 
-    float Height { get; }
-
     Vector3 Direction { get; }
+
+    int MeshIndex { get; }
+
+    Boundary[] Boundaries { get; }
 }

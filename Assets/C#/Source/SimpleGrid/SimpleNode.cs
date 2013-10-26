@@ -3,17 +3,14 @@ using UnityEngine;
 
 public struct SimpleNode : INode
 {
-    public int Index { get; private set; }
+    public int Index { get; set; }
 
-    public float Radius { get; private set; }
-
-    public float Height { get; private set; }
+    public float Radius { get; set; }
 
     public Vector3 Direction { get; set; }
 
-    public SimpleNode(int index) : this()
-    {
-        Index = index;
-    }
+    public int MeshIndex { get; set; }
+
+    public Boundary[] Boundaries { get; set; }
 }
 

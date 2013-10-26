@@ -27,14 +27,14 @@ public class SimpleGridGeneratorTests
     [TestMethod]
     public void North_Pole_Is_Correct()
     {
-        INode northPoleNode = new SimpleNode(0) {Direction = new Vector3(0, 0, 1)};
+        INode northPoleNode = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
         Assert.IsTrue(TestTools.ApproxEquals(northPoleNode, sgg.Nodes[0], 0.001f));
     }
 
     [TestMethod]
     public void South_Pole_Is_Correct()
     {
-        var southPoleNode = new SimpleNode(25) { Direction = new Vector3(0, 0, -1) };
+        var southPoleNode = new SimpleNode() { Index = 25, Direction = new Vector3(0, 0, -1) };
         Assert.IsTrue(TestTools.ApproxEquals(southPoleNode, sgg.Nodes[25], 0.001f));
     }
 
@@ -45,7 +45,7 @@ public class SimpleGridGeneratorTests
         var y = Mathf.Sin(Mathf.PI / 4) * Mathf.Sin(Mathf.PI / 4);
         var z = Mathf.Cos(Mathf.PI / 4);
 
-        var expected45N45E = new SimpleNode(2) { Direction = new Vector3(x, y, z) };
+        var expected45N45E = new SimpleNode() { Index = 2, Direction = new Vector3(x, y, z) };
         Assert.IsTrue(TestTools.ApproxEquals(expected45N45E, sgg.Nodes[2], 0.001f));
     }
 
@@ -85,6 +85,27 @@ public class SimpleGridGeneratorTests
 
         var expected67N22E = new Vector3(x, y, z);
         Assert.IsTrue(TestTools.ApproxEquals(expected67N22E, sgg.MeshVertices[2], 0.001f));
+    }
+
+    [TestMethod]
+    public void North_Pole_Node_Has_Correct_Mesh_Vertex_Index()
+    {
+        var expectedMeshIndex = 0;
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[0].MeshIndex);
+    }
+
+    [TestMethod]
+    public void South_Pole_Node_Has_Correct_Mesh_Vertex_Index()
+    {
+        var expectedMeshIndex = 113;
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[25].MeshIndex);
+    }
+
+    [TestMethod]
+    public void Node_At_45N45E_Has_Correct_Mesh_Vertex_Index()
+    {
+        var expectedMeshIndex = 19;
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[2].MeshIndex);
     }
 }
 

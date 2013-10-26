@@ -20,7 +20,6 @@ public class SimpleGridGenerator : IGridGenerator
 
         GenerateNodes(radius);
         GenerateVertices(radius);
-        //GenerateNodeBoundaries();
     }
 
     private void GenerateNodes(float radius)
@@ -29,17 +28,55 @@ public class SimpleGridGenerator : IGridGenerator
 
         Vector3[] nodeDirections = nodeHelper.NormalizedGridPoints;
 
-        for (int i = 0; i < nodeDirections.Length; i++)
+        for (int nodeIndex = 0; nodeIndex < nodeDirections.Length; nodeIndex++)
         {
-            Nodes[i] = new SimpleNode(i) { Direction = nodeDirections[i] };
+            int meshIndex = MeshIndexCorrespondingToNode(nodeIndex);
+            Boundary[] boundaries = GenerateBoundariesForNode(nodeIndex, meshIndex);
+
+            Nodes[nodeIndex] = new SimpleNode() { Index = nodeIndex, 
+                                          Direction = nodeDirections[nodeIndex], 
+                                          MeshIndex = meshIndex, 
+                                          Boundaries = boundaries};
         }
     }
 
-    public void GenerateVertices(float radius)
+    private int MeshIndexCorrespondingToNode(int index)
     {
-        Vector3[] vertexDirections = vertexHelper.NormalizedGridPoints;
-        
-        MeshVertices = vertexDirections.Select(vector => radius*vector).ToArray();
+        int meshIndex;
+
+        if (index == 0)
+        {
+            meshIndex = 0;
+        }
+        else if (index == nodeHelper.NumberOfGridPoints - 1)
+        {
+            meshIndex = vertexHelper.NumberOfGridPoints - 1;
+        }
+        else
+        {
+            int polarNodeIndex = nodeHelper.PolarIndexOf(index);
+            int azimuthalNodeIndex = nodeHelper.AzimuthalIndexOf(index);
+
+            meshIndex = vertexHelper.IndexOf(2*polarNodeIndex, 2*azimuthalNodeIndex);
+        }
+
+        return meshIndex;
     }
 
+
+
+    private Boundary[] GenerateBoundariesForNode(int nodeIndex, int meshIndex)
+    {
+        return new Boundary[0];
+    }
+
+    private void VertexIndexFromNodeIndex(int index)
+    {
+        
+    }
+
+    private void GenerateVertices(float radius)
+    {
+        MeshVertices = vertexHelper.NormalizedGridPoints.Select(vertex => radius * vertex).ToArray();
+    }
 }
