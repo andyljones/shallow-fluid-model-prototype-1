@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 
-public interface IBaseNode
+public interface IUsableSurfaceElement
 {
     int Index { get; }
+
+    int VertexIndex { get; }
 
     float Radius { get; }
 

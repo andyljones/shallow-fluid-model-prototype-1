@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
-    where TNode : IGenerableNode, new()
+public class GridGenerator<TNode> : IGridGenerator<TNode>
+    where TNode : IGenerableGridElement, new()
 {
-    public TNode[] Nodes { get; private set; }
-
     private readonly Vector3[] _nodeDirections;
     private readonly Vector3[] _vertexDirections;
     private readonly PolarAzimuthalIndexHelper _nodeIndexHelper;
     private readonly PolarAzimuthalIndexHelper _vertexIndexHelper;
 
-    public SimpleGridGenerator(int numberOfLatitudes, int numberOfLongitudes)
+    public GridGenerator(int numberOfLatitudes, int numberOfLongitudes)
     {
         var nodeGenerator = new PolarAzimuthalGridGenerator(numberOfLatitudes, numberOfLongitudes);
         _nodeDirections = nodeGenerator.Directions;
@@ -19,13 +17,11 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
         var vertexGenerator = new PolarAzimuthalGridGenerator(2*(_nodeIndexHelper.NumberOfLatitudes - 1) + 1, 2*_nodeIndexHelper.NumberOfLongitudes);
         _vertexDirections = vertexGenerator.Directions;
         _vertexIndexHelper = vertexGenerator.IndexHelper;
-
-        GenerateNodes();
     }
 
-    private void GenerateNodes()
+    public TNode[] GridElements()
     {
-        Nodes = new TNode[_nodeDirections.Length];
+        var gridElements = new TNode[_nodeDirections.Length];
 
         var nodeDirections = _nodeDirections;
         var boundaryGenerator = new BoundaryGenerator(_nodeIndexHelper, _vertexIndexHelper);
@@ -35,11 +31,13 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
             var vertexIndex = VertexIndexCorrespondingToNode(nodeIndex);
             var boundaries = boundaryGenerator.BoundariesForNode(nodeIndex, vertexIndex);
 
-            Nodes[nodeIndex] = new TNode() { Index = nodeIndex,
+            gridElements[nodeIndex] = new TNode() { Index = nodeIndex,
                                              VertexIndex = vertexIndex, 
                                              Direction = nodeDirections[nodeIndex], 
                                              Boundaries = boundaries};
         }
+
+        return gridElements;
     }
 
     private int VertexIndexCorrespondingToNode(int index)
@@ -63,5 +61,10 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
         }
 
         return meshIndex;
+    }
+
+    public Vector3[] BoundaryPoints()
+    {
+        return _vertexDirections;
     }
 }

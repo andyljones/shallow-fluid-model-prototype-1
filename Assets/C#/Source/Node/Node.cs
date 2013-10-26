@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 
-public struct SimpleNode : IGenerableNode
+public class Node : IGenerableGridElement, 
+                    IUsableGridElement, IGenerableSurfaceElement
 {
     public int Index { get; set; }
 

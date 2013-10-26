@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IGenerableNode
+public interface IGenerableGridElement
 {
     int Index { set; }
 

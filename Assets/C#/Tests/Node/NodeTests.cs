@@ -3,14 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
 
 [TestClass]
-public class SimpleNodeTests
+public class NodeTests
 {
-    private SimpleNode node;
+    private Node _node;
 
     [TestInitialize]
     public void Create_Simple_Node_At_North_Pole()
     {
-        node = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
+        _node = new Node() {Index = 0, Direction = new Vector3(0, 0, 1)};
     }
 
 }
