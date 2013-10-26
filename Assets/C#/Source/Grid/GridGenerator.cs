@@ -63,7 +63,7 @@ public class GridGenerator<TNode> : IGridGenerator<TNode>
         return meshIndex;
     }
 
-    public Vector3[] BoundaryPoints()
+    public Vector3[] BoundaryDirections()
     {
         return _vertexDirections;
     }

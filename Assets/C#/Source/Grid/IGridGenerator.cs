@@ -5,5 +5,5 @@ public interface IGridGenerator<out TNode>
 {
     TNode[] GridElements();
 
-    Vector3[] BoundaryPoints();
+    Vector3[] BoundaryDirections();
 }
