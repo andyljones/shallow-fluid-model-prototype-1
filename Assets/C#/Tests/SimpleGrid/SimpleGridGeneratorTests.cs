@@ -51,44 +51,6 @@ public class SimpleGridGeneratorTests
     }
 
     [TestMethod]
-    public void Number_Of_Mesh_Vertices_Is_Correct()
-    {
-        int expectedNumberOfMeshVertices = 114;
-        Assert.AreEqual(expectedNumberOfMeshVertices, sgg.MeshVertices.Length);
-    }
-
-    [TestMethod]
-    public void Mesh_Vertices_Are_All_Non_Null()
-    {
-        CollectionAssert.AllItemsAreNotNull(sgg.MeshVertices);
-    }
-
-    [TestMethod]
-    public void Mesh_Vertex_North_Pole_Is_Correct()
-    {
-        var northPoleVertex = new Vector3(0, 0, 6000);
-        Assert.IsTrue(TestTools.ApproxEquals(northPoleVertex, sgg.MeshVertices[0], 0.001f));
-    }
-
-    [TestMethod]
-    public void Mesh_Vertex_South_Pole_Is_Correct()
-    {
-        var southPoleVertex = new Vector3(0, 0, -6000);
-        Assert.IsTrue(TestTools.ApproxEquals(southPoleVertex, sgg.MeshVertices[113], 0.001f));
-    }
-
-    [TestMethod]
-    public void Mesh_Vertex_67N22E_Is_Correct()
-    {
-        var x = 6000 * Mathf.Sin(Mathf.PI / 8) * Mathf.Cos(Mathf.PI / 8);
-        var y = 6000 * Mathf.Sin(Mathf.PI / 8) * Mathf.Sin(Mathf.PI / 8);
-        var z = 6000 * Mathf.Cos(Mathf.PI / 8);
-
-        var expected67N22E = new Vector3(x, y, z);
-        Assert.IsTrue(TestTools.ApproxEquals(expected67N22E, sgg.MeshVertices[2], 0.001f));
-    }
-
-    [TestMethod]
     public void North_Pole_Node_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 0;

@@ -5,8 +5,6 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
     where TNode : ISimplyGeneratedNode, new()
 {
     public TNode[] Nodes { get; private set; }
-    public Vector3[] MeshVertices { get; private set; }
-    public int[] MeshTriangles { get; private set; }
 
     private PolarAzimuthalHelper nodeHelper;
     private PolarAzimuthalHelper vertexHelper;
@@ -17,7 +15,6 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
         vertexHelper = new PolarAzimuthalHelper(2*(nodeHelper.NumberOfLatitudes - 1) + 1, 2*nodeHelper.NumberOfLongitudes);
 
         GenerateNodes(radius);
-        GenerateVertices(radius);
     }
 
     private void GenerateNodes(float radius)
@@ -60,10 +57,5 @@ public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
         }
 
         return meshIndex;
-    }
-
-    private void GenerateVertices(float radius)
-    {
-        MeshVertices = vertexHelper.NormalizedGridPoints.Select(vertex => radius * vertex).ToArray();
     }
 }

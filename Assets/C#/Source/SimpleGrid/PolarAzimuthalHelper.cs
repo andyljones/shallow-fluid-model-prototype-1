@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class PolarAzimuthalHelper
 {
+    //TODO: Refactor this class into a polar-azimuthal grid generation class, and a polar-azimuthal grid helper class.
     public int NumberOfLatitudes { get; private set; }
     public int NumberOfLongitudes { get; private set; }
     public int NumberOfGridPoints { get; private set; }
 
     public Vector3[] NormalizedGridPoints { get; private set; }
 
+    #region Constructor methods & their dependents
     public PolarAzimuthalHelper(float desiredAngularResolution)
     {
         CalculateNumberOfLatitudes(desiredAngularResolution);
@@ -27,7 +29,6 @@ public class PolarAzimuthalHelper
         GenerateGridPoints();
     }
 
-#region Methods used by constructors
     private void GenerateGridPoints()
     {
         NormalizedGridPoints = new Vector3[NumberOfGridPoints];
@@ -76,10 +77,10 @@ public class PolarAzimuthalHelper
     {
         NumberOfGridPoints = NumberOfLongitudes * (NumberOfLatitudes - 2) + 2;
     }
-#endregion
+    #endregion
 
 
-
+    #region Index conversion methods
     // Offset an index by a given number of gridpoints running north-south and a given number of gridpoints running east-west. 
     public int Offset(int index, int polarOffset, int azimuthalOffset)
     {
@@ -164,6 +165,7 @@ public class PolarAzimuthalHelper
 
         return index;
     }
+    #endregion
 
     // This is an actual modulo operator, as opposed to the remainder operator % represents.
     private int MathMod(int n, int m)
