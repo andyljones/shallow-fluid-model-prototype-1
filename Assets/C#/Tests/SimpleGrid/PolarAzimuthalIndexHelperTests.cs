@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public class PolarAzimuthalHelperTests
+public class PolarAzimuthalIndexHelperTests
 {
     private PolarAzimuthalIndexHelper _indexHelper;
     private PolarAzimuthalGridGenerator _gridGenerator;
