@@ -28,7 +28,7 @@ public class SimpleGridGeneratorTests
     [TestMethod]
     public void North_Pole_Is_Correct()
     {
-        ISimplyGeneratedNode northPoleNode = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
+        var northPoleNode = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
         Assert.IsTrue(TestTools.ApproxEquals(northPoleNode, sgg.Nodes[0], 0.001f));
     }
 

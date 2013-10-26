@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
-    where TNode : ISimplyGeneratedNode, new()
+    where TNode : IGenerableNode, new()
 {
     public TNode[] Nodes { get; private set; }
 

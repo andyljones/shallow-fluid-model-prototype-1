@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public interface IGridGenerator<out TNode>
-    where TNode : ISimplyGeneratedNode, new()
+    where TNode : IGenerableNode, new()
 {
     TNode[] Nodes { get; }
 }
