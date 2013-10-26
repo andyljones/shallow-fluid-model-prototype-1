@@ -27,11 +27,12 @@ public class SimpleGridGenerator : IGridGenerator
         Nodes = new INode[nodeHelper.NormalizedGridPoints.Length];
 
         Vector3[] nodeDirections = nodeHelper.NormalizedGridPoints;
+        BoundaryGenerator boundaryGenerator = new BoundaryGenerator(nodeHelper, vertexHelper);
 
         for (int nodeIndex = 0; nodeIndex < nodeDirections.Length; nodeIndex++)
         {
             int meshIndex = MeshIndexCorrespondingToNode(nodeIndex);
-            Boundary[] boundaries = GenerateBoundariesForNode(nodeIndex, meshIndex);
+            Boundary[] boundaries = boundaryGenerator.BoundariesForNode(nodeIndex, meshIndex);
 
             Nodes[nodeIndex] = new SimpleNode() { Index = nodeIndex, 
                                           Direction = nodeDirections[nodeIndex], 
@@ -61,13 +62,6 @@ public class SimpleGridGenerator : IGridGenerator
         }
 
         return meshIndex;
-    }
-
-
-
-    private Boundary[] GenerateBoundariesForNode(int nodeIndex, int meshIndex)
-    {
-        return new Boundary[0];
     }
 
     private void VertexIndexFromNodeIndex(int index)

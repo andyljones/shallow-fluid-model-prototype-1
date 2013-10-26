@@ -130,11 +130,7 @@ public class PolarAzimuthalHelper
     {
         int azimuthalIndex;
 
-        if (index == 0)
-        {
-            azimuthalIndex = 0;
-        }
-        else if (index == NumberOfGridPoints - 1)
+        if (index == 0 || index == NumberOfGridPoints - 1)
         {
             azimuthalIndex = 0;
         }
