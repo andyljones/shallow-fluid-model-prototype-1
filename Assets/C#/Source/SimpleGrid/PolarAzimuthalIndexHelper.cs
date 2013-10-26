@@ -1,20 +1,18 @@
 using UnityEngine;
 
-public class PolarAzimuthalHelper
+public class PolarAzimuthalIndexHelper
 {
-    //TODO: Refactor this class into a polar-azimuthal grid generation class, and a polar-azimuthal grid helper class.
-    public int NumberOfLatitudes { get; private set; }
-    public int NumberOfLongitudes { get; private set; }
-    public int NumberOfGridPoints { get; private set; }
+    public readonly int NumberOfLatitudes;
+    public readonly int NumberOfLongitudes;
+    public readonly int NumberOfGridPoints;
 
-    public PolarAzimuthalHelper(int numberOfLatitudes, int numberOfLongitudes)
+    public PolarAzimuthalIndexHelper(int numberOfLatitudes, int numberOfLongitudes)
     {
         NumberOfLatitudes = numberOfLatitudes;
         NumberOfLongitudes = numberOfLongitudes;
         NumberOfGridPoints = NumberOfLongitudes * (NumberOfLatitudes - 2) + 2;
     }
 
-    #region Index conversion methods
     // Offset an index by a given number of gridpoints running north-south and a given number of gridpoints running east-west. 
     public int Offset(int index, int polarOffset, int azimuthalOffset)
     {
@@ -35,7 +33,7 @@ public class PolarAzimuthalHelper
         {
             int offsetPolarIndex = polarIndex + polarOffset;
             int offsetAzimuthalIndex = MathMod(azimuthalIndex + azimuthalOffset, NumberOfLongitudes);
-            offsetIndex = 1 + (offsetPolarIndex - 1)*NumberOfLongitudes + offsetAzimuthalIndex;
+            offsetIndex = IndexOf(offsetPolarIndex, offsetAzimuthalIndex);
         }
 
         return offsetIndex;
@@ -45,11 +43,11 @@ public class PolarAzimuthalHelper
     {
         int polarIndex;
 
-        if (index == 0)
+        if (NorthPoleIs(index))
         {
             polarIndex = 0;
         }
-        else if (index == NumberOfGridPoints - 1)
+        else if (SouthPoleIs(index))
         {
             polarIndex = NumberOfLatitudes - 1;
         }
@@ -65,7 +63,7 @@ public class PolarAzimuthalHelper
     {
         int azimuthalIndex;
 
-        if (index == 0 || index == NumberOfGridPoints - 1)
+        if (NorthPoleIs(index) || SouthPoleIs(index))
         {
             azimuthalIndex = 0;
         }
@@ -99,10 +97,19 @@ public class PolarAzimuthalHelper
 
         return index;
     }
-    #endregion
+
+    public bool NorthPoleIs(int index)
+    {
+        return index == 0;
+    }
+
+    public bool SouthPoleIs(int index)
+    {
+        return index == NumberOfGridPoints - 1;
+    }
 
     // This is an actual modulo operator, as opposed to the remainder operator % represents.
-    private int MathMod(int n, int m)
+    private static int MathMod(int n, int m)
     {
         return ((n%m) + m)%m;
     }

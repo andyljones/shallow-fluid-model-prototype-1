@@ -54,21 +54,21 @@ public class SimpleGridGeneratorTests
     public void North_Pole_Node_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 0;
-        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[0].MeshIndex);
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[0].VertexIndex);
     }
 
     [TestMethod]
     public void South_Pole_Node_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 113;
-        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[25].MeshIndex);
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[25].VertexIndex);
     }
 
     [TestMethod]
     public void Node_At_45N45E_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 19;
-        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[2].MeshIndex);
+        Assert.AreEqual(expectedMeshIndex, sgg.Nodes[2].VertexIndex);
     }
 }
 

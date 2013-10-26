@@ -9,8 +9,8 @@ public class BoundaryGeneratorTests
     [TestInitialize]
     public void Create_Boundary_Generator_For_5_Latitude_8_Longitude_Globe()
     {
-        var nodeHelper = new PolarAzimuthalHelper(5, 8);
-        var vertexHelper = new PolarAzimuthalHelper(9, 16);
+        var nodeHelper = new PolarAzimuthalIndexHelper(5, 8);
+        var vertexHelper = new PolarAzimuthalIndexHelper(9, 16);
 
         generator = new BoundaryGenerator(nodeHelper, vertexHelper);
     }
