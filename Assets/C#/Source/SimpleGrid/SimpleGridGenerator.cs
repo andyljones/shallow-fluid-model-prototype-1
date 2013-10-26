@@ -1,12 +1,10 @@
 using System.Linq;
-using System.Reflection.Emit;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UnityEditor;
 using UnityEngine;
 
-public class SimpleGridGenerator : IGridGenerator
+public class SimpleGridGenerator<TNode> : IGridGenerator<TNode>
+    where TNode : ISimplyGeneratedNode, new()
 {
-    public INode[] Nodes { get; private set; }
+    public TNode[] Nodes { get; private set; }
     public Vector3[] MeshVertices { get; private set; }
     public int[] MeshTriangles { get; private set; }
 
@@ -24,7 +22,7 @@ public class SimpleGridGenerator : IGridGenerator
 
     private void GenerateNodes(float radius)
     {
-        Nodes = new INode[nodeHelper.NormalizedGridPoints.Length];
+        Nodes = new TNode[nodeHelper.NormalizedGridPoints.Length];
 
         Vector3[] nodeDirections = nodeHelper.NormalizedGridPoints;
         BoundaryGenerator boundaryGenerator = new BoundaryGenerator(nodeHelper, vertexHelper);
@@ -34,10 +32,10 @@ public class SimpleGridGenerator : IGridGenerator
             int meshIndex = MeshIndexCorrespondingToNode(nodeIndex);
             Boundary[] boundaries = boundaryGenerator.BoundariesForNode(nodeIndex, meshIndex);
 
-            Nodes[nodeIndex] = new SimpleNode() { Index = nodeIndex, 
-                                          Direction = nodeDirections[nodeIndex], 
-                                          MeshIndex = meshIndex, 
-                                          Boundaries = boundaries};
+            Nodes[nodeIndex] = new TNode() { Index = nodeIndex, 
+                                             Direction = nodeDirections[nodeIndex], 
+                                             MeshIndex = meshIndex, 
+                                             Boundaries = boundaries};
         }
     }
 
@@ -62,11 +60,6 @@ public class SimpleGridGenerator : IGridGenerator
         }
 
         return meshIndex;
-    }
-
-    private void VertexIndexFromNodeIndex(int index)
-    {
-        
     }
 
     private void GenerateVertices(float radius)

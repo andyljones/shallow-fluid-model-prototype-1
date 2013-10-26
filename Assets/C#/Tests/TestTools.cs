@@ -14,7 +14,7 @@ public static class TestTools
                ApproxEquals(lhs.z, rhs.z, tolerance);
     }
 
-    public static bool ApproxEquals(INode lhs, INode rhs, float tolerance)
+    public static bool ApproxEquals(ISimplyGeneratedNode lhs, ISimplyGeneratedNode rhs, float tolerance)
     {
         bool areEqual = lhs.Index == rhs.Index &&
                         ApproxEquals(lhs.Radius, rhs.Radius, tolerance) &&

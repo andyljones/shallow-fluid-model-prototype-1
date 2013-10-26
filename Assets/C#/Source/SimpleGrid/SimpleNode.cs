@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public struct SimpleNode : INode
+public struct SimpleNode : ISimplyGeneratedNode
 {
     public int Index { get; set; }
 

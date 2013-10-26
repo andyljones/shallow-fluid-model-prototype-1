@@ -1,15 +1,16 @@
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
 
 [TestClass]
 public class SimpleGridGeneratorTests
 {
-    public IGridGenerator sgg;
+    public IGridGenerator<SimpleNode> sgg;
 
     [TestInitialize]
     public void Create_6000k_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
     {
-        sgg = new SimpleGridGenerator(6000, 6000 * Mathf.PI / 4);
+        sgg = new SimpleGridGenerator<SimpleNode>(6000, 6000 * Mathf.PI / 4);
     }
 
     [TestMethod]
@@ -27,7 +28,7 @@ public class SimpleGridGeneratorTests
     [TestMethod]
     public void North_Pole_Is_Correct()
     {
-        INode northPoleNode = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
+        ISimplyGeneratedNode northPoleNode = new SimpleNode() {Index = 0, Direction = new Vector3(0, 0, 1)};
         Assert.IsTrue(TestTools.ApproxEquals(northPoleNode, sgg.Nodes[0], 0.001f));
     }
 

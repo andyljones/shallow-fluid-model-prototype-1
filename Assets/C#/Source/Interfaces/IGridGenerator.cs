@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public interface IGridGenerator
+public interface IGridGenerator<out TNode>
+    where TNode : ISimplyGeneratedNode, new()
 {
-    INode[] Nodes { get; }
+    TNode[] Nodes { get; }
     
     Vector3[] MeshVertices { get; }
 
