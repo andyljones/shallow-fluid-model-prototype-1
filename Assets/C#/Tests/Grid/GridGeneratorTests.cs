@@ -5,12 +5,12 @@ using UnityEngine;
 [TestClass]
 public class GridGeneratorTests
 {
-    private IGridGenerator<Node> _generator;
+    private IGridGenerator<FakeGridElement> _generator;
 
     [TestInitialize]
     public void Create_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
     {
-        _generator = new GridGenerator<Node>(5, 8);
+        _generator = new GridGenerator<FakeGridElement>(5, 8);
     }
 
     [TestMethod]
@@ -28,15 +28,21 @@ public class GridGeneratorTests
     [TestMethod]
     public void North_Pole_Is_Correct()
     {
-        var northPoleNode = new Node() {Index = 0, Direction = new Vector3(0, 0, 1)};
-        Assert.IsTrue(TestTools.ApproxEquals(northPoleNode, _generator.GridElements()[0], 0.001f));
+        var expectedIndex = 0;
+        var expectedDirection = new Vector3(0, 0, 1);
+        var northPole = _generator.GridElements()[0];
+        Assert.AreEqual(expectedIndex, northPole.Index);
+        Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, northPole.Direction, 0.001f));
     }
 
     [TestMethod]
     public void South_Pole_Is_Correct()
     {
-        var southPoleNode = new Node() { Index = 25, Direction = new Vector3(0, 0, -1) };
-        Assert.IsTrue(TestTools.ApproxEquals(southPoleNode, _generator.GridElements()[25], 0.001f));
+        var expectedIndex = 25;
+        var expectedDirection = new Vector3(0, 0, -1);
+        var southPole = _generator.GridElements()[25];
+        Assert.AreEqual(expectedIndex, southPole.Index);
+        Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, southPole.Direction, 0.001f));
     }
 
     [TestMethod]
@@ -46,8 +52,11 @@ public class GridGeneratorTests
         var y = Mathf.Sin(Mathf.PI / 4) * Mathf.Sin(Mathf.PI / 4);
         var z = Mathf.Cos(Mathf.PI / 4);
 
-        var expected45N45E = new Node() { Index = 2, Direction = new Vector3(x, y, z) };
-        Assert.IsTrue(TestTools.ApproxEquals(expected45N45E, _generator.GridElements()[2], 0.001f));
+        var expectedIndex = 2;
+        var expectedDirection = new Vector3(x, y, z);
+        var node45N45E = _generator.GridElements()[2];
+        Assert.AreEqual(expectedIndex, node45N45E.Index);
+        Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, node45N45E.Direction, 0.001f));
     }
 
     [TestMethod]

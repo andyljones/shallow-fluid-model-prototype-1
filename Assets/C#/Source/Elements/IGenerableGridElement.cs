@@ -6,8 +6,6 @@ public interface IGenerableGridElement
 
     int VertexIndex { set; }
 
-    float Radius { set; }
-
     Vector3 Direction { set; }
 
     Boundary[] Boundaries { set; }

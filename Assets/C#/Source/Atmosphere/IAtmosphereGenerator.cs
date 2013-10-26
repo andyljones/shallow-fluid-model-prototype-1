@@ -4,7 +4,9 @@ public interface IAtmosphereGenerator<in TSurfaceElement, out TAtmosphericElemen
     where TSurfaceElement: IUsableSurfaceElement
     where TAtmosphericElement: IGenerableAtmosphericElement
 {
-    TAtmosphericElement[][] AtmosphereElements(TSurfaceElement[] surface);
+    void GenerateAtmosphere(TSurfaceElement[] surfaceElements, Vector3[] surfaceVertices);
+    
+    TAtmosphericElement[] AtmosphereElements();
 
-    Vector3[][] BoundaryPoints(TSurfaceElement[] surface);
+    Vector3[] BoundaryPoints();
 }

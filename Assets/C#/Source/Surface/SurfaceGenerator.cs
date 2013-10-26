@@ -2,8 +2,9 @@
 using System.Linq;
 using UnityEngine;
 
-public class SurfaceGenerator<TNode> : ISurfaceGenerator<TNode, TNode>
-    where TNode : class, IUsableGridElement, IGenerableSurfaceElement
+public class SurfaceGenerator<TGridElement, TSurfaceElement> : ISurfaceGenerator<TGridElement, TSurfaceElement>
+    where TGridElement : IUsableGridElement
+    where TSurfaceElement : IGenerableSurfaceElement, new()
 {
     private readonly float _radius;
 
@@ -12,14 +13,22 @@ public class SurfaceGenerator<TNode> : ISurfaceGenerator<TNode, TNode>
         _radius = radius;
     }
 
-    public TNode[] SurfaceElements(TNode[] nodes)
+    public TSurfaceElement[] SurfaceElements(TGridElement[] gridElements)
     {
-        foreach (var gridElement in nodes)
+        var surfaceElements = new TSurfaceElement[gridElements.Length];
+
+        foreach (var gridElement in gridElements)
         {
-            gridElement.Radius = _radius;
+            var surfaceElement = new TSurfaceElement() {Boundaries  = gridElement.Boundaries, 
+                                                        Direction   = gridElement.Direction,
+                                                        Index       = gridElement.Index,
+                                                        VertexIndex = gridElement.VertexIndex, 
+                                                        Radius      = _radius};
+
+            surfaceElements[gridElement.Index] = surfaceElement;
         }
 
-        return nodes;
+        return surfaceElements;
     }
 
     public Vector3[] BoundaryVertices(Vector3[] boundaryDirections)

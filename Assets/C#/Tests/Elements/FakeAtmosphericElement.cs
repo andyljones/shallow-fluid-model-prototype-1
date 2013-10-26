@@ -1,8 +1,6 @@
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Node : IGenerableGridElement, 
-                    IUsableGridElement, IGenerableSurfaceElement
+public class FakeAtmosphericElement : IGenerableAtmosphericElement
 {
     public int Index { get; set; }
 
@@ -10,8 +8,9 @@ public class Node : IGenerableGridElement,
 
     public float Radius { get; set; }
 
+    public float Height { get; set; }
+
     public Vector3 Direction { get; set; }
 
     public Boundary[] Boundaries { get; set; }
 }
-
