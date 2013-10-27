@@ -41,7 +41,7 @@ public class AtmosphericBoundaryGenerator
 
     private IEnumerable<Boundary> GenerateSides(IEnumerable<Boundary> surfaceBoundaries)
     {
-        var atmosphericBoundaries = surfaceBoundaries.Select(GenerateSide);
+        var atmosphericBoundaries = surfaceBoundaries.Select<Boundary, Boundary>(GenerateSide);
 
         return atmosphericBoundaries;
     }

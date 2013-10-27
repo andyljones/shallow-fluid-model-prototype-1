@@ -32,15 +32,15 @@ public class TestMeshHelper
         _helper = new MeshHelper(vectors);
     }
 
-    [TestMethod]
-    public void Set_Vertex_Works_Correctly()
-    {
-        _helper.SetVertex(0, 10f);
+    //[TestMethod]
+    //public void Set_Vertex_Works_Correctly()
+    //{
+    //    _helper.SetVertex(0, 10f);
         
-        var expectedVertex = new Vector3(6, 8, 0);
-        var actualVertex = _helper.Vectors[0];
-        Assert.IsTrue(TestTools.ApproxEquals(expectedVertex, actualVertex, 0.001f));
-    }
+    //    var expectedVertex = new Vector3(6, 8, 0);
+    //    var actualVertex = _helper.Vectors[0];
+    //    Assert.IsTrue(TestTools.ApproxEquals(expectedVertex, actualVertex, 0.001f));
+    //}
 
     [TestMethod]
     public void Set_Surface_Sets_Vertices_Correctly()

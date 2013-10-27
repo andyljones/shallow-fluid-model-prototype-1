@@ -21,14 +21,6 @@ public class MeshHelper
         _triangles = new List<int>();
     }
 
-    public void SetVertex(int vectorIndex, float length)
-    {
-        var currentVector = Vectors[vectorIndex];
-        var newVector = length*currentVector.normalized;
-
-        Vectors[vectorIndex] = newVector;
-    }
-
     public void SetSurface(int centralVertexIndex, Boundary[] boundaries, float length)
     {
         SetVertex(centralVertexIndex, length);
@@ -36,15 +28,37 @@ public class MeshHelper
         var boundingIndices = boundaries.SelectMany(boundary => boundary.VertexIndices);
         var distinctIndices = boundingIndices.Distinct().ToArray();
 
-        for (int i = 0; i < distinctIndices.Length - 1; i++)
+        for (int i = 0; i < distinctIndices.Length; i++)
         {
             int currentIndex = distinctIndices[i];
+            int nextIndex = distinctIndices[MathMod(i+1, distinctIndices.Length)];
+            
             SetVertex(currentIndex, length);
-            //int nextIndex = distinctIndices[i];
-            //SetTriangle()
+            SetTriangle(centralVertexIndex, currentIndex, nextIndex);
         }
 
         var lastIndex = distinctIndices[distinctIndices.Length - 1];
         SetVertex(lastIndex, length);
+    }
+
+    private void SetVertex(int vectorIndex, float length)
+    {
+        var currentVector = Vectors[vectorIndex];
+        var newVector = length * currentVector.normalized;
+
+        Vectors[vectorIndex] = newVector;
+    }
+
+    private void SetTriangle(int index1, int index2, int index3)
+    {
+        _triangles.Add(index1);
+        _triangles.Add(index2);
+        _triangles.Add(index3);
+    }
+
+    // This is an actual modulo operator, as opposed to the remainder operator % represents.
+    private static int MathMod(int n, int m)
+    {
+        return ((n % m) + m) % m;
     }
 }

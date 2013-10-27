@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AtmosphericElement : IGenerableAtmosphericElement
+public class AtmosphericElement : IGenerableAtmosphericElement, IRenderableAtmosphereElement
 {
     public int Index { get; set; }
 

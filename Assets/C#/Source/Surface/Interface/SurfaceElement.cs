@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class SurfaceElement : IGenerableSurfaceElement, IUsableSurfaceElement
+public class SurfaceElement : IGenerableSurfaceElement, IUsableSurfaceElement, IRenderableSurfaceElement
 {
     public int Index { get; set; }
 
