@@ -13,7 +13,7 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
 
     private TSurfaceElement[] _surfaceElements;
     private Vector3[] _surfaceVertices;
-
+    
     public AtmosphereGenerator(float height)
     {
         _height = height;

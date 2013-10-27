@@ -37,6 +37,22 @@ public class BoundaryGeneratorTests
     }
 
     [TestMethod]
+    public void All_Boundaries_About_North_Pole_Are_Correct()
+     {
+        var expectedBoundaries = new[] {new Boundary() { NeighboursIndex = 1, VertexIndices =  new int[] {16,  1,  2}},
+                                        new Boundary() { NeighboursIndex = 2, VertexIndices =  new int[] { 2,  3,  4}},
+                                        new Boundary() { NeighboursIndex = 3, VertexIndices =  new int[] { 4,  5,  6}},
+                                        new Boundary() { NeighboursIndex = 4, VertexIndices =  new int[] { 6,  7,  8}},
+                                        new Boundary() { NeighboursIndex = 5, VertexIndices =  new int[] { 8,  9, 10}},
+                                        new Boundary() { NeighboursIndex = 6, VertexIndices =  new int[] {10, 11, 12}},
+                                        new Boundary() { NeighboursIndex = 7, VertexIndices =  new int[] {12, 13, 14}},
+                                        new Boundary() { NeighboursIndex = 8, VertexIndices =  new int[] {14, 15, 16}}};
+
+        var actualBoundaries = generator.BoundariesForNode(0, 0);
+        CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
+    }
+
+    [TestMethod]
     public void Generates_Correct_Number_of_Boundaries_At_South_Pole()
     {
         int expectedNumberOfBoundaries = 8;
@@ -55,6 +71,22 @@ public class BoundaryGeneratorTests
         var expectedBoundary = new Boundary() { NeighboursIndex = 24, VertexIndices = new int[] { 112, 111, 110 } };
         var actualBoundary = generator.BoundariesForNode(25, 113)[7];
         Assert.AreEqual(expectedBoundary, actualBoundary);
+    }
+
+    [TestMethod]
+    public void All_Boundaries_About_South_Pole_Are_Correct()
+    {
+        var expectedBoundaries = new[] {new Boundary() { NeighboursIndex = 17, VertexIndices =  new int[] { 98,  97, 112}},
+                                        new Boundary() { NeighboursIndex = 18, VertexIndices =  new int[] {100,  99,  98}},
+                                        new Boundary() { NeighboursIndex = 19, VertexIndices =  new int[] {102, 101, 100}},
+                                        new Boundary() { NeighboursIndex = 20, VertexIndices =  new int[] {104, 103, 102}},
+                                        new Boundary() { NeighboursIndex = 21, VertexIndices =  new int[] {106, 105, 104}},
+                                        new Boundary() { NeighboursIndex = 22, VertexIndices =  new int[] {108, 107, 106}},
+                                        new Boundary() { NeighboursIndex = 23, VertexIndices =  new int[] {110, 109, 108}},
+                                        new Boundary() { NeighboursIndex = 24, VertexIndices =  new int[] {112, 111, 110}}};
+
+        var actualBoundaries = generator.BoundariesForNode(25, 113);
+        CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
     }
 
     [TestMethod]

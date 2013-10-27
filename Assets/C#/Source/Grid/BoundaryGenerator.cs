@@ -58,7 +58,7 @@
         {
             int neighbouringIndex = _nodeIndexHelper.Offset(nodeIndex, -1, nodeOffset);
             
-            int vertexOffset = nodeOffset * 2;
+            int vertexOffset = nodeOffset * 2; //TODO: Visual bug is here somewhere I think.
             var vertexIndices = new int[] { _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset + 1), 
                                               _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset + 0), 
                                               _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset - 1)};

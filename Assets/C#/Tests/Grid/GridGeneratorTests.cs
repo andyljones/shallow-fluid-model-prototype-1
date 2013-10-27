@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
 
-//TODO: Add tests for boundary vertices that are generated
 [TestClass]
 public class GridGeneratorTests
 {
@@ -78,6 +77,70 @@ public class GridGeneratorTests
     {
         var expectedMeshIndex = 19;
         Assert.AreEqual(expectedMeshIndex, _generator.GridElements()[2].VertexIndex);
+    }
+
+    [TestMethod]
+    public void All_Boundaries_About_North_Pole_Are_Correct()
+    {
+        var expectedBoundaries = new[] {new Boundary { NeighboursIndex = 1, VertexIndices =  new[] {16,  1,  2}},
+                                        new Boundary { NeighboursIndex = 2, VertexIndices =  new[] { 2,  3,  4}},
+                                        new Boundary { NeighboursIndex = 3, VertexIndices =  new[] { 4,  5,  6}},
+                                        new Boundary { NeighboursIndex = 4, VertexIndices =  new[] { 6,  7,  8}},
+                                        new Boundary { NeighboursIndex = 5, VertexIndices =  new[] { 8,  9, 10}},
+                                        new Boundary { NeighboursIndex = 6, VertexIndices =  new[] {10, 11, 12}},
+                                        new Boundary { NeighboursIndex = 7, VertexIndices =  new[] {12, 13, 14}},
+                                        new Boundary { NeighboursIndex = 8, VertexIndices =  new[] {14, 15, 16}}};
+
+        var actualBoundaries = _generator.GridElements()[0].Boundaries;
+        CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
+    }
+
+    [TestMethod]
+    public void All_Boundaries_About_South_Pole_Are_Correct()
+    {
+        var expectedBoundaries = new[] {new Boundary { NeighboursIndex = 17, VertexIndices =  new[] { 98,  97, 112}},
+                                        new Boundary { NeighboursIndex = 18, VertexIndices =  new[] {100,  99,  98}},
+                                        new Boundary { NeighboursIndex = 19, VertexIndices =  new[] {102, 101, 100}},
+                                        new Boundary { NeighboursIndex = 20, VertexIndices =  new[] {104, 103, 102}},
+                                        new Boundary { NeighboursIndex = 21, VertexIndices =  new[] {106, 105, 104}},
+                                        new Boundary { NeighboursIndex = 22, VertexIndices =  new[] {108, 107, 106}},
+                                        new Boundary { NeighboursIndex = 23, VertexIndices =  new[] {110, 109, 108}},
+                                        new Boundary { NeighboursIndex = 24, VertexIndices =  new[] {112, 111, 110}}};
+
+        var actualBoundaries = _generator.GridElements()[25].Boundaries;
+        CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
+    }
+
+    [TestMethod]
+    public void Northern_Boundary_Of_45N45E_Is_Correct()
+    {
+        var expectedBoundary = new Boundary() { NeighboursIndex = 0, VertexIndices = new int[] { 4, 3, 2 } };
+        var actualBoundary = _generator.GridElements()[2].Boundaries[0];
+        Assert.AreEqual(expectedBoundary, actualBoundary);
+    }
+
+    [TestMethod]
+    public void Western_Boundary_Of_45N45E_Is_Correct()
+    {
+        var expectedBoundary = new Boundary() { NeighboursIndex = 1, VertexIndices = new int[] { 2, 18, 34 } };
+        var actualBoundary = _generator.GridElements()[2].Boundaries[1];
+        Assert.AreEqual(expectedBoundary, actualBoundary);
+    }
+
+    [TestMethod]
+    public void Southern_Boundary_Of_45N45E_Is_Correct()
+    {
+        var expectedBoundary = new Boundary() { NeighboursIndex = 10, VertexIndices = new int[] { 34, 35, 36 } };
+        var actualBoundary = _generator.GridElements()[2].Boundaries[2];
+        Assert.AreEqual(expectedBoundary, actualBoundary);
+    }
+
+    [TestMethod]
+    public void Eastern_Boundary_Of_45N45E_Is_Correct()
+    {
+        var expectedBoundary = new Boundary() { NeighboursIndex = 3, VertexIndices = new int[] { 36, 20, 4 } };
+        var actualBoundary = _generator.GridElements()[2].Boundaries[3];
+        Assert.AreEqual(expectedBoundary, actualBoundary);
     }
 }
 
