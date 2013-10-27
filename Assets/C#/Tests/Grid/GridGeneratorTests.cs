@@ -5,23 +5,26 @@ using UnityEngine;
 public class GridGeneratorTests
 {
     private IGridGenerator<FakeGridElement> _generator;
+    private FakeGridElement[] _elements;
+    private Vector3[] _vectors;
 
     [TestInitialize]
     public void Create_Simple_Grid_With_Five_Latitudes_And_Eight_Longitudes()
     {
         _generator = new GridGenerator<FakeGridElement>(5, 8);
+        _elements = _generator.Grid().Elements;
     }
 
     [TestMethod]
     public void Right_Number_Of_Nodes()
     {
-        Assert.AreEqual(26, _generator.GridElements().Length);
+        Assert.AreEqual(26, _elements.Length);
     }
 
     [TestMethod]
     public void Every_Node_Has_Been_Created()
     {
-        CollectionAssert.AllItemsAreNotNull(_generator.GridElements());
+        CollectionAssert.AllItemsAreNotNull(_elements);
     }
 
     [TestMethod]
@@ -29,7 +32,7 @@ public class GridGeneratorTests
     {
         var expectedIndex = 0;
         var expectedDirection = new Vector3(0, 0, 1);
-        var northPole = _generator.GridElements()[0];
+        var northPole = _elements[0];
         Assert.AreEqual(expectedIndex, northPole.Index);
         Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, northPole.Direction, 0.001f));
     }
@@ -39,7 +42,7 @@ public class GridGeneratorTests
     {
         var expectedIndex = 25;
         var expectedDirection = new Vector3(0, 0, -1);
-        var southPole = _generator.GridElements()[25];
+        var southPole = _elements[25];
         Assert.AreEqual(expectedIndex, southPole.Index);
         Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, southPole.Direction, 0.001f));
     }
@@ -53,7 +56,7 @@ public class GridGeneratorTests
 
         var expectedIndex = 2;
         var expectedDirection = new Vector3(x, y, z);
-        var node45N45E = _generator.GridElements()[2];
+        var node45N45E = _elements[2];
         Assert.AreEqual(expectedIndex, node45N45E.Index);
         Assert.IsTrue(TestTools.ApproxEquals(expectedDirection, node45N45E.Direction, 0.001f));
     }
@@ -62,21 +65,21 @@ public class GridGeneratorTests
     public void North_Pole_Node_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 0;
-        Assert.AreEqual(expectedMeshIndex, _generator.GridElements()[0].VertexIndex);
+        Assert.AreEqual(expectedMeshIndex, _elements[0].VertexIndex);
     }
 
     [TestMethod]
     public void South_Pole_Node_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 113;
-        Assert.AreEqual(expectedMeshIndex, _generator.GridElements()[25].VertexIndex);
+        Assert.AreEqual(expectedMeshIndex, _elements[25].VertexIndex);
     }
 
     [TestMethod]
     public void Node_At_45N45E_Has_Correct_Mesh_Vertex_Index()
     {
         var expectedMeshIndex = 19;
-        Assert.AreEqual(expectedMeshIndex, _generator.GridElements()[2].VertexIndex);
+        Assert.AreEqual(expectedMeshIndex, _elements[2].VertexIndex);
     }
 
     [TestMethod]
@@ -91,7 +94,7 @@ public class GridGeneratorTests
                                         new Boundary { NeighboursIndex = 7, VertexIndices =  new[] {12, 13, 14}},
                                         new Boundary { NeighboursIndex = 8, VertexIndices =  new[] {14, 15, 16}}};
 
-        var actualBoundaries = _generator.GridElements()[0].Boundaries;
+        var actualBoundaries = _elements[0].Boundaries;
         CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
     }
 
@@ -107,7 +110,7 @@ public class GridGeneratorTests
                                          new Boundary() { NeighboursIndex = 19, VertexIndices =  new int[] {102, 101, 100}},
                                          new Boundary() { NeighboursIndex = 18, VertexIndices =  new int[] {100,  99,  98}}};
 
-        var actualBoundaries = _generator.GridElements()[25].Boundaries;
+        var actualBoundaries = _elements[25].Boundaries;
         CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);
     }
 
@@ -115,7 +118,7 @@ public class GridGeneratorTests
     public void Northern_Boundary_Of_45N45E_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 0, VertexIndices = new int[] { 4, 3, 2 } };
-        var actualBoundary = _generator.GridElements()[2].Boundaries[0];
+        var actualBoundary = _elements[2].Boundaries[0];
         Assert.AreEqual(expectedBoundary, actualBoundary);
     }
 
@@ -123,7 +126,7 @@ public class GridGeneratorTests
     public void Western_Boundary_Of_45N45E_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 1, VertexIndices = new int[] { 2, 18, 34 } };
-        var actualBoundary = _generator.GridElements()[2].Boundaries[1];
+        var actualBoundary = _elements[2].Boundaries[1];
         Assert.AreEqual(expectedBoundary, actualBoundary);
     }
 
@@ -131,7 +134,7 @@ public class GridGeneratorTests
     public void Southern_Boundary_Of_45N45E_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 10, VertexIndices = new int[] { 34, 35, 36 } };
-        var actualBoundary = _generator.GridElements()[2].Boundaries[2];
+        var actualBoundary = _elements[2].Boundaries[2];
         Assert.AreEqual(expectedBoundary, actualBoundary);
     }
 
@@ -139,7 +142,7 @@ public class GridGeneratorTests
     public void Eastern_Boundary_Of_45N45E_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 3, VertexIndices = new int[] { 36, 20, 4 } };
-        var actualBoundary = _generator.GridElements()[2].Boundaries[3];
+        var actualBoundary = _elements[2].Boundaries[3];
         Assert.AreEqual(expectedBoundary, actualBoundary);
     }
 }

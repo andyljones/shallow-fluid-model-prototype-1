@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class GridGenerator<TNode> : IGridGenerator<TNode>
-    where TNode : IGenerableGridElement, new()
+//TODO: Refactor this mess.
+
+public class GridGenerator<TElement> : IGridGenerator<TElement>
+    where TElement : IGenerableGridElement, new()
 {
     private readonly Vector3[] _nodeDirections;
     private readonly Vector3[] _vertexDirections;
@@ -19,9 +21,17 @@ public class GridGenerator<TNode> : IGridGenerator<TNode>
         _vertexIndexHelper = vertexGenerator.IndexHelper;
     }
 
-    public TNode[] GridElements()
+    public Grid<TElement> Grid()
     {
-        var gridElements = new TNode[_nodeDirections.Length];
+        var elements = GridElements();
+        var vectors = GridVectors();
+
+        return new Grid<TElement>(elements, vectors);
+    }
+
+    public TElement[] GridElements()
+    {
+        var gridElements = new TElement[_nodeDirections.Length];
 
         var nodeDirections = _nodeDirections;
         var boundaryGenerator = new BoundaryGenerator(_nodeIndexHelper, _vertexIndexHelper);
@@ -31,7 +41,7 @@ public class GridGenerator<TNode> : IGridGenerator<TNode>
             var vertexIndex = VertexIndexCorrespondingToNode(nodeIndex);
             var boundaries = boundaryGenerator.BoundariesForNode(nodeIndex, vertexIndex);
 
-            gridElements[nodeIndex] = new TNode() { Index = nodeIndex,
+            gridElements[nodeIndex] = new TElement() { Index = nodeIndex,
                                              VertexIndex = vertexIndex, 
                                              Direction = nodeDirections[nodeIndex], 
                                              Boundaries = boundaries};
@@ -63,7 +73,7 @@ public class GridGenerator<TNode> : IGridGenerator<TNode>
         return meshIndex;
     }
 
-    public Vector3[] BoundaryDirections()
+    private Vector3[] GridVectors()
     {
         return _vertexDirections;
     }

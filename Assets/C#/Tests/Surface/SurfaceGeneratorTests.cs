@@ -2,40 +2,46 @@
 using UnityEngine;
 
 //TODO: Add tests to make sure that the properties of the SurfaceElement are the same as those of the GridElement
+//TODO: Clean these test cases up.
 [TestClass]
 public class SurfaceGeneratorTests
 {
-    private FakeGridElement[] _gridElements;
-    private Vector3[] _directions;
     private SurfaceGenerator<FakeGridElement, FakeSurfaceElement> _generator;
-    
+    private Surface<FakeSurfaceElement> _surface;
+
     [TestInitialize]
     public void Create_Grid_And_6000km_Surface()
     {
-        var boundary = new Boundary() { NeighboursIndex = 4, VertexIndices = new int[] { 20, 30 } };
-        var fakeGridElement = new FakeGridElement() { Boundaries = new[] {boundary}, 
-                                                      Direction = new Vector3(1,0,0).normalized,
-                                                      Index = 0,
-                                                      VertexIndex = 10};
+        var gridElement = new FakeGridElement
+        {
+            Boundaries = new[]
+            {
+                new Boundary {NeighboursIndex = 4, VertexIndices = new[] {20, 30}}
+            },
+            Direction = new Vector3(1, 0, 0).normalized,
+            Index = 0,
+            VertexIndex = 10
+        };
 
-        _gridElements = new[] { fakeGridElement };
-        _directions = new[] { new Vector3(1, 1, 1)};
+        var gridElements = new[] { gridElement };
+        var gridVectors = new[] { new Vector3(1, 1, 1) };
+        var fakeGrid = new Grid<FakeGridElement>(gridElements, gridVectors);
+
         _generator = new SurfaceGenerator<FakeGridElement, FakeSurfaceElement>(6000f);
+        _surface = _generator.Surface(fakeGrid);
     }
 
     [TestMethod]
     public void Correct_Number_of_Elements()
     {
         var expectedNumberOfElements = 1;
-        var surfaceElements = _generator.SurfaceElements(_gridElements);
-        Assert.AreEqual(expectedNumberOfElements, surfaceElements.Length);
+        Assert.AreEqual(expectedNumberOfElements, _surface.Elements.Length);
     }
 
     [TestMethod]
     public void Elements_Radius_Is_Set_Correctly()
     {
         var expectedRadius = 6000f;
-        var surfaceElements = _generator.SurfaceElements(_gridElements);
-        Assert.AreEqual(expectedRadius, surfaceElements[0].Radius);
+        Assert.AreEqual(expectedRadius, _surface.Elements[0].Radius);
     }
 }

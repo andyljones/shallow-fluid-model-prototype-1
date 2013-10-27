@@ -40,13 +40,14 @@ public class AtmosphereGeneratorTests
             VertexIndex = 12
         };
 
-        var elements = new[] {fakeNode0, fakeNode1, fakeNode2};
-        var vertices = new[] { new Vector3(3, 4, 0), new Vector3(4, 0, 3), new Vector3(0, 3, 4)};
+        var surfaceElements = new[] {fakeNode0, fakeNode1, fakeNode2};
+        var surfaceVertices = new[] { new Vector3(3, 4, 0), new Vector3(4, 0, 3), new Vector3(0, 3, 4)};
+        var surface = new Surface<FakeSurfaceElement>(surfaceElements, surfaceVertices);
 
         _generator = new AtmosphereGenerator<FakeSurfaceElement, FakeAtmosphericElement>(10f);
-        _generator.GenerateAtmosphere(elements, vertices);
-        _atmosphericElements = _generator.AtmosphereElements();
-        _atmosphericVertices = _generator.AtmosphereVertices();
+        var atmosphere = _generator.Atmosphere(surface);
+        _atmosphericElements = atmosphere.Elements;
+        _atmosphericVertices = atmosphere.Vectors;
     }
 
     [TestMethod]

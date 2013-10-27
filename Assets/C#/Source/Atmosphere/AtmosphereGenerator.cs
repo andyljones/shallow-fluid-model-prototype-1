@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Linq.Expressions;
 using UnityEngine;
 
 public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosphereGenerator<TSurfaceElement, TAtmosphereElement>
@@ -8,41 +7,30 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
 {
     private readonly float _height;
 
-    private TAtmosphereElement[] _atmosphereElements;
-    private Vector3[] _atmosphericVertices;
-
-    private TSurfaceElement[] _surfaceElements;
-    private Vector3[] _surfaceVertices;
+    private int _numberOfSurfaceVectors;
     
     public AtmosphereGenerator(float height)
     {
         _height = height;
     }
 
-    public void GenerateAtmosphere(TSurfaceElement[] surfaceElements, Vector3[] surfaceVertices)
+    public Atmosphere<TAtmosphereElement> Atmosphere(Surface<TSurfaceElement> surface)
     {
-        _surfaceElements = surfaceElements;
-        _surfaceVertices = surfaceVertices;
+        _numberOfSurfaceVectors = surface.Vectors.Length;
 
-        GenerateAtmosphereElements();
-        GenerateAtmosphereVertices();
+        var atmosphereElements = GenerateAtmosphereElements(surface.Elements);
+        var atmosphereVectors = GenerateAtmosphereVectors(surface.Vectors);
+
+        var atmosphere = new Atmosphere<TAtmosphereElement>(atmosphereElements, atmosphereVectors);
+
+        return atmosphere;
     }
 
-    //TODO: Refactor this into a property rather than a method, and apply the same pattern across the other generators
-    public TAtmosphereElement[] AtmosphereElements()
+    #region Atmosphere element generation
+    private TAtmosphereElement[] GenerateAtmosphereElements(TSurfaceElement[] surfaceElements)
     {
-        return _atmosphereElements;
-    }
-
-    public Vector3[] AtmosphereVertices()
-    {
-        return _atmosphericVertices;
-    }
-
-    private void GenerateAtmosphereElements()
-    {
-        var boundaryGenerator = new AtmosphericBoundaryGenerator(_surfaceVertices.Length);
-        _atmosphereElements = _surfaceElements.Select(element => GenerateAtmosphereElement(element, boundaryGenerator)).ToArray();
+        var boundaryGenerator = new AtmosphericBoundaryGenerator(_numberOfSurfaceVectors);
+        return surfaceElements.Select(element => GenerateAtmosphereElement(element, boundaryGenerator)).ToArray();
     }
 
     private TAtmosphereElement GenerateAtmosphereElement(TSurfaceElement surfaceElement, AtmosphericBoundaryGenerator boundaryGenerator)
@@ -70,19 +58,22 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
     private int[] CalculateCentralVertexIndicies(int surfaceElementVertexIndex)
     {
         int bottomLayerCentralVertexIndex = surfaceElementVertexIndex;
-        int middleLayerCentralVertexIndex = surfaceElementVertexIndex + _surfaceVertices.Length;
-        int topLayerCentralVertexIndex = surfaceElementVertexIndex + 2*_surfaceVertices.Length;
+        int middleLayerCentralVertexIndex = surfaceElementVertexIndex + _numberOfSurfaceVectors;
+        int topLayerCentralVertexIndex = surfaceElementVertexIndex + 2*_numberOfSurfaceVectors;
 
         return new[] {bottomLayerCentralVertexIndex, middleLayerCentralVertexIndex, topLayerCentralVertexIndex};
     }
+    #endregion
 
-    private void GenerateAtmosphereVertices()
+    #region Atmosphere vector generation
+    private Vector3[] GenerateAtmosphereVectors(Vector3[] surfaceVectors)
     {
-        var bottomLayer = _surfaceVertices;
-        var middleLayer = _surfaceVertices;
-        var topLayer = _surfaceVertices;
+        var bottomLayer = surfaceVectors;
+        var middleLayer = surfaceVectors;
+        var topLayer = surfaceVectors;
 
-        _atmosphericVertices = bottomLayer.Concat(middleLayer).Concat(topLayer).ToArray();
+        return bottomLayer.Concat(middleLayer).Concat(topLayer).ToArray();
     }
+    #endregion
 
 }
