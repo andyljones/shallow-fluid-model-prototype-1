@@ -45,7 +45,7 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
         var atmosphereElement = new TAtmosphereElement()
         {
             Index = index,
-            CentralVertexIndicies = centralVertexIndices,
+            CentralVertexIndices = centralVertexIndices,
             Radius = radius,
             Height = height,
             Direction = direction,

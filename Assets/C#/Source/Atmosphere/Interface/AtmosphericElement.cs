@@ -4,7 +4,7 @@ public class AtmosphericElement : IGenerableAtmosphericElement, IRenderableAtmos
 {
     public int Index { get; set; }
 
-    public int[] CentralVertexIndicies { get; set; }
+    public int[] CentralVertexIndices { get; set; }
 
     public float Radius { get; set; }
 

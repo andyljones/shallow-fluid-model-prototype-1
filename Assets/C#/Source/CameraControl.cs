@@ -34,7 +34,7 @@ public class CameraControl : MonoBehaviour
 
         r += Input.GetAxis("Mouse ScrollWheel") * rSpeed;
 
-        Quaternion rotation = Quaternion.Euler(y, x, 0.0F);
+        Quaternion rotation = Quaternion.Euler(y, x, 0);
         Vector3 position = rotation * new Vector3(0.0F, 0.0F, -r);
 
         transform.rotation = rotation;
