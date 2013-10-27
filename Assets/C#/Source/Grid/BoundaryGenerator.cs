@@ -56,12 +56,13 @@
 
         for (int nodeOffset = 0; nodeOffset < _nodeIndexHelper.NumberOfLongitudes; nodeOffset++)
         {
-            int neighbouringIndex = _nodeIndexHelper.Offset(nodeIndex, -1, nodeOffset);
+            // Offsetting to the west preserve ordering. Ensures the order of the indicies' appearance is compatible with the renderer's clockwise rule.
+            int neighbouringIndex = _nodeIndexHelper.Offset(nodeIndex, -1, -nodeOffset);
             
-            int vertexOffset = nodeOffset * 2; //TODO: Visual bug is here somewhere I think.
+            int vertexOffset = -nodeOffset * 2; 
             var vertexIndices = new int[] { _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset + 1), 
-                                              _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset + 0), 
-                                              _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset - 1)};
+                                            _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset + 0), 
+                                            _vertexIndexHelper.Offset(vertexIndex, -1, vertexOffset - 1)};
 
             boundaries[nodeOffset] = new Boundary() { NeighboursIndex = neighbouringIndex, VertexIndices = vertexIndices };
         }

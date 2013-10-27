@@ -115,28 +115,28 @@ public class AtmosphereGeneratorTests
     public void Top_Boundary_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = -1, VertexIndices = new[] { 26, 36, 46 } };
-        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[4]);
+        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[1]);
     }
 
     [TestMethod]
     public void First_Side_Boundary_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 4, VertexIndices = new[] { 20, 30, 26, 36 } };
-        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[1]);
+        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[2]);
     }
 
     [TestMethod]
     public void Second_Side_Boundary_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 5, VertexIndices = new[] { 30, 40, 36, 46 } };
-        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[2]);
+        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[3]);
     }
 
     [TestMethod]
     public void Third_Side_Boundary_Is_Correct()
     {
         var expectedBoundary = new Boundary() { NeighboursIndex = 6, VertexIndices = new[] { 40, 20, 46, 26 } };
-        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[3]);
+        Assert.AreEqual(expectedBoundary, _atmosphericElements[1].Boundaries[4]);
     }
 
     [TestMethod]
@@ -150,26 +150,5 @@ public class AtmosphereGeneratorTests
     public void Atmospheric_Vertices_Are_All_Non_Null()
     {
         CollectionAssert.AllItemsAreNotNull(_atmosphericVertices);
-    }
-
-    [TestMethod]
-    public void Atmospheric_Bottom_Layer_Has_Right_Magnitude()
-    {
-        var expectedMagnitude = 5f;
-        Assert.AreEqual(expectedMagnitude, _atmosphericVertices[0].magnitude);
-    }
-
-    [TestMethod]
-    public void Atmospheric_Middle_Layer_Has_Right_Magnitude()
-    {
-        var expectedMagnitude = 10f;
-        Assert.AreEqual(expectedMagnitude, _atmosphericVertices[4].magnitude);
-    }
-
-    [TestMethod]
-    public void Atmospheric_Top_Layer_Has_Right_Magnitude()
-    {
-        var expectedMagnitude = 15f;
-        Assert.AreEqual(expectedMagnitude, _atmosphericVertices[7].magnitude);
     }
 }

@@ -5,6 +5,4 @@ public interface ISurfaceGenerator<in TGridElement, out TSurfaceElement>
     where TSurfaceElement: IGenerableSurfaceElement, new()
 {
     TSurfaceElement[] SurfaceElements(TGridElement[] gridElements);
-
-    Vector3[] BoundaryVertices(Vector3[] boundaryDirections);
 }

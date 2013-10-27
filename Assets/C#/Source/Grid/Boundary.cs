@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 public struct Boundary
@@ -22,7 +23,7 @@ public struct Boundary
 
     }
 
-    #region Equality & hashcode overrides.
+    #region Equals, GetHashCode & ToString overrides.
     public bool Equals(Boundary other)
     {
         if (GetHashCode() != other.GetHashCode())
@@ -40,5 +41,17 @@ public struct Boundary
     {
         return NeighboursIndex.GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return String.Format("Neighbour Index: {0}\n Boundary Vertex Indicies: {1}", NeighboursIndex, PrintIntArray(VertexIndices));
+    }
+
+    private string PrintIntArray(int[] array)
+    {
+        return String.Join(", ", array.Select(i => i.ToString()).ToArray());
+    }
     #endregion
+
+
 }

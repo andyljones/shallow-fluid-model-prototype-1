@@ -98,14 +98,14 @@ public class GridGeneratorTests
     [TestMethod]
     public void All_Boundaries_About_South_Pole_Are_Correct()
     {
-        var expectedBoundaries = new[] {new Boundary { NeighboursIndex = 17, VertexIndices =  new[] { 98,  97, 112}},
-                                        new Boundary { NeighboursIndex = 18, VertexIndices =  new[] {100,  99,  98}},
-                                        new Boundary { NeighboursIndex = 19, VertexIndices =  new[] {102, 101, 100}},
-                                        new Boundary { NeighboursIndex = 20, VertexIndices =  new[] {104, 103, 102}},
-                                        new Boundary { NeighboursIndex = 21, VertexIndices =  new[] {106, 105, 104}},
-                                        new Boundary { NeighboursIndex = 22, VertexIndices =  new[] {108, 107, 106}},
-                                        new Boundary { NeighboursIndex = 23, VertexIndices =  new[] {110, 109, 108}},
-                                        new Boundary { NeighboursIndex = 24, VertexIndices =  new[] {112, 111, 110}}};
+        var expectedBoundaries = new[]  {new Boundary() { NeighboursIndex = 17, VertexIndices =  new int[] { 98,  97, 112}},
+                                         new Boundary() { NeighboursIndex = 24, VertexIndices =  new int[] {112, 111, 110}},
+                                         new Boundary() { NeighboursIndex = 23, VertexIndices =  new int[] {110, 109, 108}},
+                                         new Boundary() { NeighboursIndex = 22, VertexIndices =  new int[] {108, 107, 106}},
+                                         new Boundary() { NeighboursIndex = 21, VertexIndices =  new int[] {106, 105, 104}},
+                                         new Boundary() { NeighboursIndex = 20, VertexIndices =  new int[] {104, 103, 102}},
+                                         new Boundary() { NeighboursIndex = 19, VertexIndices =  new int[] {102, 101, 100}},
+                                         new Boundary() { NeighboursIndex = 18, VertexIndices =  new int[] {100,  99,  98}}};
 
         var actualBoundaries = _generator.GridElements()[25].Boundaries;
         CollectionAssert.AreEqual(expectedBoundaries, actualBoundaries);

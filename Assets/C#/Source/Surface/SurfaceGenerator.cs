@@ -30,11 +30,4 @@ public class SurfaceGenerator<TGridElement, TSurfaceElement> : ISurfaceGenerator
 
         return surfaceElements;
     }
-
-    public Vector3[] BoundaryVertices(Vector3[] boundaryDirections)
-    {
-        var boundaryVertices = boundaryDirections.Select(direction => _radius*direction.normalized);
-
-        return boundaryVertices.ToArray();
-    }
 }

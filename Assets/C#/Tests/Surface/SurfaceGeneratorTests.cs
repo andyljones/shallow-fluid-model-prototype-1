@@ -38,14 +38,4 @@ public class SurfaceGeneratorTests
         var surfaceElements = _generator.SurfaceElements(_gridElements);
         Assert.AreEqual(expectedRadius, surfaceElements[0].Radius);
     }
-
-    [TestMethod]
-    public void Vertex_Radius_Is_Set_Correctly()
-    {
-        var expectedVector = new Vector3(3464.1016f, 3464.1016f, 3464.1016f);
-        var vertices = _generator.BoundaryVertices(_directions);
-        Assert.IsTrue(TestTools.ApproxEquals(expectedVector, vertices[0], 0.001f));
-    }
-
-
 }
