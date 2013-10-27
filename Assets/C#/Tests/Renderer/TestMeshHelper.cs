@@ -32,16 +32,6 @@ public class TestMeshHelper
         _helper = new MeshHelper(vectors);
     }
 
-    //[TestMethod]
-    //public void Set_Vertex_Works_Correctly()
-    //{
-    //    _helper.SetVertex(0, 10f);
-        
-    //    var expectedVertex = new Vector3(6, 8, 0);
-    //    var actualVertex = _helper.Vectors[0];
-    //    Assert.IsTrue(TestTools.ApproxEquals(expectedVertex, actualVertex, 0.001f));
-    //}
-
     [TestMethod]
     public void Set_Surface_Sets_Vertices_Correctly()
     {
@@ -85,5 +75,30 @@ public class TestMeshHelper
         var actualTriangles = _helper.Triangles;
 
         CollectionAssert.AreEqual(expectedTriangles, actualTriangles);
+    }
+
+    [TestMethod]
+    public void Set_Surface_Sets_Normals_Correctly()
+    {
+        _helper.SetSurface(6, _boundaries, 10f);
+
+        var expectedNormals = new[]
+        {
+            new Vector3(3, 4, 0).normalized, 
+            new Vector3(1, 0, 0).normalized, 
+            new Vector3(0, 1, 0).normalized, 
+            new Vector3(0, 0, 1).normalized, 
+            new Vector3(1, 1, 0).normalized,
+            new Vector3(0, 1, 1).normalized,
+            new Vector3(1, 1, 1).normalized
+        };
+
+        var actualNormals = _helper.Normals;
+
+        Assert.AreEqual(expectedNormals.Length, actualNormals.Length);
+        for (int i = 0; i < expectedNormals.Length; i++)
+        {
+            Assert.IsTrue(TestTools.ApproxEquals(expectedNormals[i], actualNormals[i], 0.01f));
+        }
     }
 }

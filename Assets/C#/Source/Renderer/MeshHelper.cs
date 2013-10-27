@@ -5,20 +5,22 @@ using UnityEngine;
 public class MeshHelper
 {
     public Vector3[] Vectors { get; private set; }
+    public Vector3[] Normals { get; private set; }
 
     public int[] Triangles
     {
         get
         {
-            return _triangles.ToArray();
+            return _triangleBuffer.ToArray();
         }
     }
-    private List<int> _triangles; 
-    
+    private List<int> _triangleBuffer; 
+
     public MeshHelper(Vector3[] vectors)
     {
         Vectors = vectors;
-        _triangles = new List<int>();
+        Normals = new Vector3[vectors.Length]; 
+        _triangleBuffer = new List<int>();
     }
 
     public void SetSurface(int centralVertexIndex, Boundary[] boundaries, float length)
@@ -44,16 +46,18 @@ public class MeshHelper
     private void SetVertex(int vectorIndex, float length)
     {
         var currentVector = Vectors[vectorIndex];
-        var newVector = length * currentVector.normalized;
+        var normalizedVector = currentVector.normalized;
+        var newVector = length * normalizedVector;
 
+        Normals[vectorIndex] = normalizedVector;
         Vectors[vectorIndex] = newVector;
     }
 
     private void SetTriangle(int index1, int index2, int index3)
     {
-        _triangles.Add(index1);
-        _triangles.Add(index2);
-        _triangles.Add(index3);
+        _triangleBuffer.Add(index1);
+        _triangleBuffer.Add(index2);
+        _triangleBuffer.Add(index3);
     }
 
     // This is an actual modulo operator, as opposed to the remainder operator % represents.

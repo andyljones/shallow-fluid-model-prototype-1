@@ -1,5 +1,6 @@
 ﻿/*****************NOT UNDER TEST**************/
 
+using System;
 using System.Linq.Expressions;
 using UnityEditor;
 using UnityEngine;
@@ -23,15 +24,17 @@ public class PlanetRenderer<TSurfaceElement, TAtmosphereElement> : IPlanetRender
             helper.SetSurface(element.VertexIndex, element.Boundaries, element.Radius);
         }
 
-        return new Mesh {vertices = helper.Vectors, triangles = helper.Triangles};
+        return new Mesh {vertices = helper.Vectors, triangles = helper.Triangles, normals = helper.Normals};
     }
 
     private void SetSurfaceObject(Mesh surfaceMesh)
     {
         var surfaceObject = new GameObject("Surface");
+        
         var surfaceRenderer = surfaceObject.AddComponent<MeshRenderer>();
-        var surfaceMeshFilter = surfaceObject.AddComponent<MeshFilter>();
+        surfaceRenderer.material = (Material) Resources.Load("OceanWater", typeof (Material));
 
+        var surfaceMeshFilter = surfaceObject.AddComponent<MeshFilter>();
         surfaceMeshFilter.mesh = surfaceMesh;
     }
 }
