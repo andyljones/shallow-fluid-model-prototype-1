@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
 
+//TODO: Holy shit refactor this, it's horrible. Extract a boundary generator?
 public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosphereGenerator<TSurfaceElement, TAtmosphereElement>
     where TSurfaceElement : IUsableSurfaceElement
     where TAtmosphereElement : IGenerableAtmosphericElement, new()
 {
-    private float _height;
+    private readonly float _height;
 
     private TAtmosphereElement[] _atmosphereElements;
     private Vector3[] _atmosphericVertices;
@@ -23,7 +24,7 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
         _surfaceElements = surfaceElements;
         _surfaceVertices = surfaceVertices;
 
-        _atmosphereElements = _surfaceElements.Select(surfaceElement => GenerateAtmosphereElement(surfaceElement)).ToArray();
+        _atmosphereElements = _surfaceElements.Select(GenerateAtmosphereElement).ToArray();
     }
 
 
@@ -56,22 +57,61 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
 
     private Boundary[] GenerateBoundaries(Boundary[] surfaceBoundaries)
     {
-        var numberOfBoundaries = surfaceBoundaries.Length + 2;
-        var atmosphericBoundaries = new Boundary[numberOfBoundaries];
+        var topAndBottomBoundaries = GenerateTopAndBottom(surfaceBoundaries);
+        var bottomBoundary = new[] {topAndBottomBoundaries[0]};
+        var topBoundary = new[] {topAndBottomBoundaries[1]};
+        var sideBoundaries = GenerateSides(surfaceBoundaries);
 
-        //GenerateTopBoundary(surfaceBoundaries, atmosphericBoundaries);
+        var atmosphericBoundaries = bottomBoundary.Concat(sideBoundaries).Concat(topBoundary);
 
-        return atmosphericBoundaries;
+        return atmosphericBoundaries.ToArray();
     }
 
+    private Boundary[] GenerateTopAndBottom(Boundary[] surfaceBoundaries)
+    {
+        int[] boundaryPoints = surfaceBoundaries.SelectMany(boundary => boundary.VertexIndices).Distinct().ToArray();
+
+        var bottomBoundary = new Boundary() {NeighboursIndex = -1, VertexIndices = boundaryPoints};
+
+        int offset = _surfaceVertices.Length*2;
+        var topBoundary = new Boundary() {NeighboursIndex = -1, VertexIndices = boundaryPoints.Select(i => i + offset).ToArray()};
+
+        return new[] { bottomBoundary, topBoundary };
+    }
+
+    private Boundary[] GenerateSides(Boundary[] surfaceBoundaries)
+    {
+        var atmosphericBoundaries = surfaceBoundaries.Select(GenerateSide);
+
+        return atmosphericBoundaries.ToArray();
+    }
+
+    private Boundary GenerateSide(Boundary surfaceBoundary)
+    {
+        int offset = _surfaceVertices.Length * 2;
+
+        int neighbourIndex = surfaceBoundary.NeighboursIndex;
+
+        var lowerVertexIndicies = surfaceBoundary.VertexIndices;
+        var upperVertexIndicies = surfaceBoundary.VertexIndices.Select(index => index + offset);
+        int[] vertexIndicies = lowerVertexIndicies.Concat(upperVertexIndicies).ToArray();
+
+        var atmosphericBoundary = new Boundary() {NeighboursIndex = neighbourIndex, VertexIndices = vertexIndicies};
+
+        return atmosphericBoundary;
+    }
 
     public TAtmosphereElement[] AtmosphereElements()
     {
         return _atmosphereElements;
     }
 
-    public Vector3[] BoundaryPoints()
+    public Vector3[] AtmosphereVertices()
     {
-        throw new System.NotImplementedException();
+        var bottomLayer = _surfaceVertices;
+        var middleLayer = _surfaceVertices.Select(vertex => (_height / 2 + vertex.magnitude)*vertex.normalized);
+        var topLayer = _surfaceVertices.Select(vertex => (_height + vertex.magnitude) * vertex.normalized);
+
+        return bottomLayer.Concat(middleLayer).Concat(topLayer).ToArray();
     }
 }

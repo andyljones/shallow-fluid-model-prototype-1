@@ -8,5 +8,5 @@ public interface IAtmosphereGenerator<in TSurfaceElement, out TAtmosphericElemen
     
     TAtmosphericElement[] AtmosphereElements();
 
-    Vector3[] BoundaryPoints();
+    Vector3[] AtmosphereVertices();
 }
