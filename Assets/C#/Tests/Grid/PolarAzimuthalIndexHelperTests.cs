@@ -38,6 +38,22 @@ public class PolarAzimuthalIndexHelperTests
     }
 
     [TestMethod]
+    public void Southern_Offset_From_North_Pole_Works_Correctly()
+    {
+        int indexOfNorthPole = 0;
+        int indexOf45N45E = 2;
+        Assert.AreEqual(indexOf45N45E, _indexHelper.Offset(indexOfNorthPole, 1, 1));
+    }
+
+    [TestMethod]
+    public void Northern_Offset_From_South_Pole_Works_Correctly()
+    {
+        int indexOfSouthPole = 25;
+        int indexOf45S0W = 17;
+        Assert.AreEqual(indexOf45S0W, _indexHelper.Offset(indexOfSouthPole, -1, 0));
+    }
+
+    [TestMethod]
     public void South_Western_Offset_Across_Prime_Meridian_Is_Correct()
     {
         int indexOf0N0E = 9;
