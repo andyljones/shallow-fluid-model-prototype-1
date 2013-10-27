@@ -48,7 +48,7 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
     private TAtmosphereElement GenerateAtmosphereElement(TSurfaceElement surfaceElement, AtmosphericBoundaryGenerator boundaryGenerator)
     {
         var index = surfaceElement.Index;
-        var vertexIndex = surfaceElement.VertexIndex + _surfaceVertices.Length;
+        var centralVertexIndices = CalculateCentralVertexIndicies(surfaceElement.VertexIndex);
         var radius = surfaceElement.Radius;
         var height = _height;
         var direction = surfaceElement.Direction;
@@ -57,7 +57,7 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
         var atmosphereElement = new TAtmosphereElement()
         {
             Index = index,
-            VertexIndex = vertexIndex,
+            CentralVertexIndicies = centralVertexIndices,
             Radius = radius,
             Height = height,
             Direction = direction,
@@ -65,6 +65,15 @@ public class AtmosphereGenerator<TSurfaceElement, TAtmosphereElement> : IAtmosph
         };
 
         return atmosphereElement;
+    }
+
+    private int[] CalculateCentralVertexIndicies(int surfaceElementVertexIndex)
+    {
+        int bottomLayerCentralVertexIndex = surfaceElementVertexIndex;
+        int middleLayerCentralVertexIndex = surfaceElementVertexIndex + _surfaceVertices.Length;
+        int topLayerCentralVertexIndex = surfaceElementVertexIndex + 2*_surfaceVertices.Length;
+
+        return new[] {bottomLayerCentralVertexIndex, middleLayerCentralVertexIndex, topLayerCentralVertexIndex};
     }
 
     private void GenerateAtmosphereVertices()

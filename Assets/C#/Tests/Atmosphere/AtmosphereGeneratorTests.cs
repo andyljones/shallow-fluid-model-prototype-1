@@ -70,10 +70,11 @@ public class AtmosphereGeneratorTests
     }
 
     [TestMethod]
-    public void Atmospheric_Elements_Have_The_Right_Vertex_Index()
+    public void Atmospheric_Elements_Have_The_Right_Vertex_Indices()
     {
-        var expectedVertexIndex = 14;
-        Assert.AreEqual(expectedVertexIndex, _atmosphericElements[1].VertexIndex);
+        var expectedVertexIndices = new[] {11, 14, 17};
+        var actualVertexIndices = _atmosphericElements[1].CentralVertexIndicies;
+        CollectionAssert.AreEqual(expectedVertexIndices, actualVertexIndices);
     }
 
     [TestMethod]

@@ -13,7 +13,7 @@
     {
         Boundary[] boundaries;
 
-        if (_nodeIndexHelper.NorthPoleIs(nodeIndex))
+        if (_nodeIndexHelper.NorthPoleIs(nodeIndex)) //TODO: Rewrite as "nodeIndex == _nodeIndexHelper.NorthPole"
         {
             boundaries = GenerateNorthPolarBoundary(nodeIndex, vertexIndex);
         }

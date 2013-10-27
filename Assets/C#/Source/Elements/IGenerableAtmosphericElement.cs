@@ -4,7 +4,7 @@ public interface IGenerableAtmosphericElement
 {
     int Index { set; }
 
-    int VertexIndex { set; } //TODO: Replace with an array of CentralVertexIndicies
+    int[] CentralVertexIndicies { set; }
 
     float Radius { set; }
 
