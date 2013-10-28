@@ -8,6 +8,8 @@ public class LoadingScript : MonoBehaviour {
     private const float Radius = 6000f;
     private const float Height = 100f;
 
+    private PlanetRenderer<SurfaceElement, AtmosphericElement> _planetRenderer; 
+
 	void Start ()
 	{
 	    var gridGen = new GridGenerator<GridElement>(NumberOfLatitudes, NumberOfLongitudes);
@@ -18,13 +20,12 @@ public class LoadingScript : MonoBehaviour {
 	    var surface = surfaceGen.Surface(grid);
 	    var atmosphere = atmosphereGen.Atmosphere(surface);
 
-        var planetRenderer = new PlanetRenderer<SurfaceElement, AtmosphericElement>();
-
-        planetRenderer.InitializeScene(surface, atmosphere);
+        _planetRenderer = new PlanetRenderer<SurfaceElement, AtmosphericElement>();
+        _planetRenderer.InitializeScene(surface, atmosphere);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    _planetRenderer.UpdateScene();
 	}
 }

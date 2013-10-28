@@ -22,6 +22,12 @@ public class PlanetRenderer<TSurfaceElement, TAtmosphereElement> : IPlanetRender
         SetAtmosphereObject();
     }
 
+    public void UpdateScene()
+    {
+        UpdateSurfaceObject();
+        UpdateAtmosphereObject();
+    }
+
     #region Surface initializatiion
     private void SetSurfaceObject()
     {
@@ -29,27 +35,37 @@ public class PlanetRenderer<TSurfaceElement, TAtmosphereElement> : IPlanetRender
         _surfaceObject.AddComponent<MeshFilter>();
         _surfaceObject.AddComponent<MeshRenderer>();
 
-        SetSurfaceMesh();
-        SetSurfaceRenderer();
-    }    
+        UpdateSurfaceMesh();
+        UpdateSurfaceRenderer();
+    }
+
+    private void UpdateSurfaceObject()
+    {
+        UpdateSurfaceMesh();
+        //UpdateSurfaceRenderer();
+    }
     
-    private void SetSurfaceMesh()
+    private void UpdateSurfaceMesh(bool UpdateTriangles = false)
     {
         var helper = new MeshHelper(_surface.Vectors);
 
         foreach (var element in _surface.Elements)
         {
-            helper.SetPolygon(element.VertexIndex, element.Boundaries, element.Radius, UpdateTriangles: true);
+            helper.SetPolygon(element.VertexIndex, element.Boundaries, element.Radius, UpdateTriangles);
         }
 
         var mesh = _surfaceObject.GetComponent<MeshFilter>().mesh;
 
         mesh.vertices = helper.Vectors;
-        mesh.triangles = helper.Triangles;
         mesh.normals = helper.Normals;
+
+        if (UpdateTriangles)
+        {
+            mesh.triangles = helper.Triangles;
+        }
     }
 
-    private void SetSurfaceRenderer()
+    private void UpdateSurfaceRenderer()
     {
         var surfaceRenderer = _surfaceObject.GetComponent<MeshRenderer>();
         surfaceRenderer.material = (Material)Resources.Load("OceanWater", typeof(Material));
@@ -63,27 +79,37 @@ public class PlanetRenderer<TSurfaceElement, TAtmosphereElement> : IPlanetRender
         _atmosphereObject.AddComponent<MeshFilter>();
         _atmosphereObject.AddComponent<MeshRenderer>();
 
-        SetAtmosphereMesh();
-        SetAtmosphereRenderer();
-    }    
+        UpdateAtmosphereMesh(UpdateTriangles: true);
+        UpdateAtmosphereRenderer();
+    }
+
+    private void UpdateAtmosphereObject()
+    {
+        UpdateAtmosphereMesh();
+        //UpdateAtmosphereRenderer();
+    }
     
-    private void SetAtmosphereMesh()
+    private void UpdateAtmosphereMesh(bool UpdateTriangles = false)
     {
         var helper = new MeshHelper(_atmosphere.Vectors);
 
         foreach (var element in _atmosphere.Elements)
         {
-            helper.SetPolygon(element.CentralVertexIndices[0], new[] { element.Boundaries[0] }, element.Radius, UpdateTriangles: true);
-            helper.SetPolygon(element.CentralVertexIndices[2], new[] { element.Boundaries[1] }, element.Radius + element.Height, UpdateTriangles: true);
+            helper.SetPolygon(element.CentralVertexIndices[0], new[] { element.Boundaries[0] }, element.Radius, UpdateTriangles);
+            helper.SetPolygon(element.CentralVertexIndices[2], new[] { element.Boundaries[1] }, element.Radius + element.Height, UpdateTriangles);
         }
 
         var mesh = _atmosphereObject.GetComponent<MeshFilter>().mesh;
         mesh.vertices = helper.Vectors;
-        mesh.triangles = helper.Triangles;
         mesh.normals = helper.Normals;
+
+        if (UpdateTriangles)
+        {
+            mesh.triangles = helper.Triangles;
+        }
     }
 
-    private void SetAtmosphereRenderer()
+    private void UpdateAtmosphereRenderer()
     {
         var atmosphereRenderer = _atmosphereObject.GetComponent<MeshRenderer>();
         atmosphereRenderer.material = (Material)Resources.Load("Sky", typeof(Material));
