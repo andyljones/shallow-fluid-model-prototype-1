@@ -44,7 +44,7 @@ public struct Boundary
 
     public override string ToString()
     {
-        return String.Format("Neighbour Index: {0}\n Boundary Vertex Indicies: {1}", NeighboursIndex, PrintIntArray(VertexIndices));
+        return String.Format("Neighbour Index: {0}\n Boundary Vertex Indices: {1}", NeighboursIndex, PrintIntArray(VertexIndices));
     }
 
     private string PrintIntArray(int[] array)

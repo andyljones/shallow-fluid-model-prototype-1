@@ -19,7 +19,7 @@ public class BoundaryTests
     }
 
     [TestMethod]
-    public void Boundaries_With_Different_Indicies_Are_Not_Equal()
+    public void Boundaries_With_Different_Indices_Are_Not_Equal()
     {
         var differentBoundary = new Boundary() { NeighboursIndex = 4, VertexIndices = new int[] { 5, 2, 7, 3 } };
         Assert.AreNotEqual(boundary, differentBoundary);

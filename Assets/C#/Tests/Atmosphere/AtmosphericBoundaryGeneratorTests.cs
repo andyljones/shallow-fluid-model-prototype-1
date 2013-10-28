@@ -9,9 +9,9 @@ public class AtmosphericBoundaryGeneratorTests
     private Boundary[] southPolarSurfaceBoundaries;
 
     [TestInitialize]
-    public void Create_Generator_With_Indicies_Vertices_Per_Layer()
+    public void Create_Generator_With_Indices_Vertices_Per_Layer()
     {
-        var indiciesPerLayer = 114;
+        //var indicesPerLayer = 114;
         _generator = new AtmosphericBoundaryGenerator(114);
 
         northPolarSurfaceBoundaries = new[]

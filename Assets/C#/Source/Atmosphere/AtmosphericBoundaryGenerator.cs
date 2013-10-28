@@ -3,11 +3,11 @@ using System.Linq;
 
 public class AtmosphericBoundaryGenerator
 {
-    private readonly int _numberOfIndiciesPerLayer;
+    private readonly int _numberOfIndicesPerLayer;
 
-    public AtmosphericBoundaryGenerator(int numberOfIndiciesPerLayer)
+    public AtmosphericBoundaryGenerator(int numberOfIndicesPerLayer)
     {
-        _numberOfIndiciesPerLayer = numberOfIndiciesPerLayer;
+        _numberOfIndicesPerLayer = numberOfIndicesPerLayer;
     }
 
     public Boundary[] BoundariesOf(Boundary[] surfaceBoundaries)
@@ -23,20 +23,20 @@ public class AtmosphericBoundaryGenerator
     private IEnumerable<Boundary> GenerateTopAndBottom(IEnumerable<Boundary> surfaceBoundaries)
     {
         //TODO: Is the bug because the order of the boundaries themselves is off at the north/south pole, so Distinct() doesn't return them in order?
-        int[] surfaceBoundaryIndicies = surfaceBoundaries.SelectMany(boundary => boundary.VertexIndices).Distinct().ToArray();
+        int[] surfaceBoundaryIndices = surfaceBoundaries.SelectMany(boundary => boundary.VertexIndices).Distinct().ToArray();
 
         var bottomBoundary = new Boundary() { NeighboursIndex = -1, 
-                                              VertexIndices = surfaceBoundaryIndicies };
+                                              VertexIndices = surfaceBoundaryIndices };
 
         var topBoundary    = new Boundary() { NeighboursIndex = -1, 
-                                              VertexIndices = OffsetIndiciesToTopLayer(surfaceBoundaryIndicies) };
+                                              VertexIndices = OffsetIndicesToTopLayer(surfaceBoundaryIndices) };
 
         return new[] { bottomBoundary, topBoundary };
     }
 
-    private int[] OffsetIndiciesToTopLayer(int[] surfaceVertexIndices)
+    private int[] OffsetIndicesToTopLayer(int[] surfaceVertexIndices)
     {
-        return surfaceVertexIndices.Select(i => i + 2*_numberOfIndiciesPerLayer).ToArray();
+        return surfaceVertexIndices.Select(i => i + 2*_numberOfIndicesPerLayer).ToArray();
     }
 
     private IEnumerable<Boundary> GenerateSides(IEnumerable<Boundary> surfaceBoundaries)
@@ -50,11 +50,11 @@ public class AtmosphericBoundaryGenerator
     {
         int neighbourIndex = surfaceBoundary.NeighboursIndex;
 
-        var lowerVertexIndicies = surfaceBoundary.VertexIndices;
-        var upperVertexIndicies = OffsetIndiciesToTopLayer(surfaceBoundary.VertexIndices);
-        int[] vertexIndicies = lowerVertexIndicies.Concat(upperVertexIndicies).ToArray();
+        var lowerVertexIndices = surfaceBoundary.VertexIndices;
+        var upperVertexIndices = OffsetIndicesToTopLayer(surfaceBoundary.VertexIndices);
+        int[] vertexIndices = lowerVertexIndices.Concat(upperVertexIndices).ToArray();
 
-        var atmosphericBoundary = new Boundary { NeighboursIndex = neighbourIndex, VertexIndices = vertexIndicies };
+        var atmosphericBoundary = new Boundary { NeighboursIndex = neighbourIndex, VertexIndices = vertexIndices };
 
         return atmosphericBoundary;
     }

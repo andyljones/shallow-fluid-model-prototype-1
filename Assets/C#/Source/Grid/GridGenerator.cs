@@ -1,7 +1,5 @@
 using UnityEngine;
 
-//TODO: Refactor this mess.
-
 public class GridGenerator<TElement> : IGridGenerator<TElement>
     where TElement : IGenerableGridElement, new()
 {

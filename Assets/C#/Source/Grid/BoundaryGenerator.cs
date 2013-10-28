@@ -56,7 +56,7 @@
 
         for (int nodeOffset = 0; nodeOffset < _nodeIndexHelper.NumberOfLongitudes; nodeOffset++)
         {
-            // Offsetting to the west preserve ordering. Ensures the order of the indicies' appearance is compatible with the renderer's clockwise rule.
+            // Offsetting to the west preserve ordering. Ensures the order of the indices' appearance is compatible with the renderer's clockwise rule.
             int neighbouringIndex = _nodeIndexHelper.Offset(nodeIndex, -1, -nodeOffset);
             
             int vertexOffset = -nodeOffset * 2; 

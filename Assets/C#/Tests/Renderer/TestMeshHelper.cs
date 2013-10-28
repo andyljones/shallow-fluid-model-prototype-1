@@ -60,7 +60,7 @@ public class TestMeshHelper
     [TestMethod]
     public void Set_Surface_Sets_Triangles_Correctly()
     {
-        _helper.SetPolygon(6, _boundaries, 10f, UpdateTriangles: true);
+        _helper.SetPolygon(6, _boundaries, 10f);
 
         var expectedTriangles = new[]
         {
@@ -103,9 +103,9 @@ public class TestMeshHelper
     }
 
     [TestMethod]
-    public void Set_Vertices_Works_Correctly()
+    public void Update_Polygon_Works_Correctly()
     {
-        _helper.SetPolygon(6, _boundaries, 10f);
+        _helper.UpdatePolygon(6, _boundaries, 10f);
 
         var expectedVectors = new[]
         {
