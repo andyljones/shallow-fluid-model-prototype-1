@@ -23,7 +23,7 @@ public class MeshHelper
         _triangleBuffer = new List<int>();
     }
 
-    public void SetSurface(int centralVertexIndex, Boundary[] boundaries, float length)
+    public void SetPolygon(int centralVertexIndex, Boundary[] boundaries, float length, bool UpdateTriangles = false)
     {
         SetVertex(centralVertexIndex, length);
 
@@ -36,7 +36,11 @@ public class MeshHelper
             int nextIndex = distinctIndices[MathMod(i+1, distinctIndices.Length)];
             
             SetVertex(currentIndex, length);
-            SetTriangle(centralVertexIndex, currentIndex, nextIndex);
+
+            if (UpdateTriangles)
+            {
+                SetTriangle(centralVertexIndex, currentIndex, nextIndex);
+            }
         }
 
         var lastIndex = distinctIndices[distinctIndices.Length - 1];

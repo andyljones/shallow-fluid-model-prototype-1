@@ -35,7 +35,7 @@ public class TestMeshHelper
     [TestMethod]
     public void Set_Surface_Sets_Vertices_Correctly()
     {
-        _helper.SetSurface(6, _boundaries, 10f);
+        _helper.SetPolygon(6, _boundaries, 10f);
 
         var expectedVectors = new[]
         {
@@ -60,7 +60,7 @@ public class TestMeshHelper
     [TestMethod]
     public void Set_Surface_Sets_Triangles_Correctly()
     {
-        _helper.SetSurface(6, _boundaries, 10f);
+        _helper.SetPolygon(6, _boundaries, 10f, UpdateTriangles: true);
 
         var expectedTriangles = new[]
         {
@@ -80,7 +80,7 @@ public class TestMeshHelper
     [TestMethod]
     public void Set_Surface_Sets_Normals_Correctly()
     {
-        _helper.SetSurface(6, _boundaries, 10f);
+        _helper.SetPolygon(6, _boundaries, 10f);
 
         var expectedNormals = new[]
         {
@@ -99,6 +99,31 @@ public class TestMeshHelper
         for (int i = 0; i < expectedNormals.Length; i++)
         {
             Assert.IsTrue(TestTools.ApproxEquals(expectedNormals[i], actualNormals[i], 0.01f));
+        }
+    }
+
+    [TestMethod]
+    public void Set_Vertices_Works_Correctly()
+    {
+        _helper.SetPolygon(6, _boundaries, 10f);
+
+        var expectedVectors = new[]
+        {
+            new Vector3(6, 8, 0), 
+            new Vector3(10, 0, 0), 
+            new Vector3(0, 10, 0), 
+            new Vector3(0, 0, 10), 
+            new Vector3(7.071f, 7.071f, 0),
+            new Vector3(0, 7.071f, 7.071f),
+            new Vector3(5.7735f, 5.7735f, 5.7735f)
+        };
+
+        var actualVectors = _helper.Vectors;
+
+        Assert.AreEqual(expectedVectors.Length, actualVectors.Length);
+        for (int i = 0; i < expectedVectors.Length; i++)
+        {
+            Assert.IsTrue(TestTools.ApproxEquals(expectedVectors[i], actualVectors[i], 0.01f));
         }
     }
 }

@@ -1,65 +1,93 @@
 ﻿/*****************NOT UNDER TEST**************/
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
 
 public class PlanetRenderer<TSurfaceElement, TAtmosphereElement> : IPlanetRenderer<TSurfaceElement, TAtmosphereElement>
     where TSurfaceElement : IRenderableSurfaceElement
     where TAtmosphereElement : IRenderableAtmosphereElement
 {
+    private Surface<TSurfaceElement> _surface;
+    private Atmosphere<TAtmosphereElement> _atmosphere;
+
+    private GameObject _surfaceObject;
+    private GameObject _atmosphereObject;
+
     public void InitializeScene(Surface<TSurfaceElement> surface, Atmosphere<TAtmosphereElement> atmosphere)
     {
-        SetSurfaceObject(GenerateSurfaceMesh(surface));
-        SetAtmosphereObject(GenerateAtmosphereMesh(atmosphere));
+        _surface = surface;
+        _atmosphere = atmosphere;
+
+        SetSurfaceObject();
+        SetAtmosphereObject();
     }
 
-    #region Surface Rendering
-    private Mesh GenerateSurfaceMesh(Surface<TSurfaceElement> surface)
+    #region Surface initializatiion
+    private void SetSurfaceObject()
     {
-        var helper = new MeshHelper(surface.Vectors);
+        _surfaceObject = new GameObject("Surface");
+        _surfaceObject.AddComponent<MeshFilter>();
+        _surfaceObject.AddComponent<MeshRenderer>();
 
-        foreach (var element in surface.Elements)
+        SetSurfaceMesh();
+        SetSurfaceRenderer();
+    }    
+    
+    private void SetSurfaceMesh()
+    {
+        var helper = new MeshHelper(_surface.Vectors);
+
+        foreach (var element in _surface.Elements)
         {
-            helper.SetSurface(element.VertexIndex, element.Boundaries, element.Radius);
+            helper.SetPolygon(element.VertexIndex, element.Boundaries, element.Radius, UpdateTriangles: true);
         }
 
-        return new Mesh {vertices = helper.Vectors, triangles = helper.Triangles, normals = helper.Normals};
+        var mesh = _surfaceObject.GetComponent<MeshFilter>().mesh;
+
+        mesh.vertices = helper.Vectors;
+        mesh.triangles = helper.Triangles;
+        mesh.normals = helper.Normals;
     }
 
-    private void SetSurfaceObject(Mesh surfaceMesh)
+    private void SetSurfaceRenderer()
     {
-        var surfaceObject = new GameObject("Surface");
-        
-        var surfaceRenderer = surfaceObject.AddComponent<MeshRenderer>();
-        surfaceRenderer.material = (Material) Resources.Load("OceanWater", typeof (Material));
-
-        var surfaceMeshFilter = surfaceObject.AddComponent<MeshFilter>();
-        surfaceMeshFilter.mesh = surfaceMesh;
+        var surfaceRenderer = _surfaceObject.GetComponent<MeshRenderer>();
+        surfaceRenderer.material = (Material)Resources.Load("OceanWater", typeof(Material));
     }
     #endregion
 
-    #region Atmosphere Rendering
-    private Mesh GenerateAtmosphereMesh(Atmosphere<TAtmosphereElement> atmosphere)
+    #region Atmosphere initialization
+    private void SetAtmosphereObject()
     {
-        var helper = new MeshHelper(atmosphere.Vectors);
+        _atmosphereObject = new GameObject("Atmosphere");
+        _atmosphereObject.AddComponent<MeshFilter>();
+        _atmosphereObject.AddComponent<MeshRenderer>();
 
-        foreach (var element in atmosphere.Elements)
+        SetAtmosphereMesh();
+        SetAtmosphereRenderer();
+    }    
+    
+    private void SetAtmosphereMesh()
+    {
+        var helper = new MeshHelper(_atmosphere.Vectors);
+
+        foreach (var element in _atmosphere.Elements)
         {
-            helper.SetSurface(element.CentralVertexIndices[0], new[] { element.Boundaries[0] }, element.Radius);
-            helper.SetSurface(element.CentralVertexIndices[2], new[] { element.Boundaries[1] }, element.Radius + element.Height);
+            helper.SetPolygon(element.CentralVertexIndices[0], new[] { element.Boundaries[0] }, element.Radius, UpdateTriangles: true);
+            helper.SetPolygon(element.CentralVertexIndices[2], new[] { element.Boundaries[1] }, element.Radius + element.Height, UpdateTriangles: true);
         }
 
-        return new Mesh { vertices = helper.Vectors, triangles = helper.Triangles, normals = helper.Normals };
+        var mesh = _atmosphereObject.GetComponent<MeshFilter>().mesh;
+        mesh.vertices = helper.Vectors;
+        mesh.triangles = helper.Triangles;
+        mesh.normals = helper.Normals;
     }
 
-    private void SetAtmosphereObject(Mesh atmosphereMesh)
+    private void SetAtmosphereRenderer()
     {
-        var atmosphereObject = new GameObject("Atmosphere");
-
-        var atmosphereRenderer = atmosphereObject.AddComponent<MeshRenderer>();
+        var atmosphereRenderer = _atmosphereObject.GetComponent<MeshRenderer>();
         atmosphereRenderer.material = (Material)Resources.Load("Sky", typeof(Material));
-
-        var atmosphereMeshFilter = atmosphereObject.AddComponent<MeshFilter>();
-        atmosphereMeshFilter.mesh = atmosphereMesh;
     }
+
     #endregion
 }
