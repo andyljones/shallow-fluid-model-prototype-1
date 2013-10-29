@@ -9,6 +9,6 @@ public class GridElement : IGenerableGridElement, IUsableGridElement
 
     public Vector3 Direction { get; set; }
 
-    public Boundary[] Boundaries { get; set; }
+    public Boundary[] Boundaries { get; set; } //TODO: Should this be an interface, if only for testing?
 }
 

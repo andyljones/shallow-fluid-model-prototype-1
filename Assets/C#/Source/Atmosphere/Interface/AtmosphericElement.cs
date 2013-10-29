@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AtmosphericElement : IGenerableAtmosphericElement, IRenderableAtmosphereElement
+public class AtmosphericElement : IGenerableAtmosphericElement, IRenderableAtmosphereElement, ISimulableAtmosphereElement
 {
     public int Index { get; set; }
 
@@ -13,4 +13,6 @@ public class AtmosphericElement : IGenerableAtmosphericElement, IRenderableAtmos
     public Vector3 Direction { get; set; }
 
     public Boundary[] Boundaries { get; set; }
+
+    public ISimulableConditions Conditions { get; set; }
 }
