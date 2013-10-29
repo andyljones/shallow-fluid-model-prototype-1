@@ -4,6 +4,6 @@
 
     public PersistantInformation GetPersistantInformation(int index)
     {
-        return _information[index];
+        return _persistantInformation[index];
     }
 }
