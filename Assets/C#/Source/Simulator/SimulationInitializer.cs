@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public class SimulatorInitializer<TAtmosphereElement, TConditions>
+public class SimulationInitializer<TAtmosphereElement, TConditions>
     where TAtmosphereElement : class, ISimulableAtmosphereElement
     where TConditions : struct, ISimulableConditions
 {
@@ -10,7 +10,7 @@ public class SimulatorInitializer<TAtmosphereElement, TConditions>
 
     public PersistantInformation[] Information { get; private set; }
 
-    public SimulatorInitializer(TAtmosphereElement[] atmosphereElements, TConditions initialConditions)
+    public SimulationInitializer(TAtmosphereElement[] atmosphereElements, TConditions initialConditions)
     {
         _atmosphereElements = atmosphereElements;
         _initialConditions = initialConditions;

@@ -1,8 +1,4 @@
 ﻿using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Permissions;
-using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphereElement, TConditions>
     where TAtmosphereElement : class, ISimulableAtmosphereElement
