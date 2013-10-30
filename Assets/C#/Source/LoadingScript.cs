@@ -8,7 +8,7 @@ public class LoadingScript : MonoBehaviour {
     private const float Radius = 6000f;
     private const float Height = 100f;
 
-    private const float Timestep = 0.01f;
+    private const float Timestep = 15f;
     private const int MaxStepsPerFrame = 1;
     private const float g = 0.01f;
 
@@ -34,7 +34,7 @@ public class LoadingScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        _simulation.StepSimulation();;
+        _simulation.StepSimulation();
 	    _planetRenderer.UpdateScene();
 	}
 }

@@ -71,18 +71,15 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
             
         }
 
-        var f = element.Direction.normalized.z*0.01f;
+        var f = element.Direction.normalized.z*0.001f;
 
         var dhdt = F[0];
-        var dhudt = F[1];
-        var dhvdt = F[2];
+        var dudt = F[1];
+        var dvdt = F[2];
 
         var h = oldConditions.h + dhdt*_timestep;
-        var hu = oldConditions.V.x + dhudt*_timestep;
-        var hv = oldConditions.V.y + dhvdt*_timestep;
-
-        var u = (float) (hu/h + f*oldConditions.V.y*_timestep);
-        var v = (float) (hv/h - f*oldConditions.V.x*_timestep);
+        var u = oldConditions.V.x + (dudt + f*oldConditions.V.y)*_timestep;
+        var v = oldConditions.V.y + (dvdt - f*oldConditions.V.x)*_timestep;
 
         _currentConditions[element.Index] = new TConditions { h = h, V = new Vector3(u, v, 0) };
 
@@ -93,14 +90,14 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
     {
         var neighbourConditions = _oldConditions[boundary.NeighboursIndex];
 
-        var hFace = (conditions.h + neighbourConditions.h)/2;
+        var hFace = (neighbourConditions.h - conditions.h) / 2;
         var VFace = (conditions.V + neighbourConditions.V)/2;
 
         var hFlux = Vector3.Dot(VFace, neighbourDirection)*hFace;
-        var huFlux = Vector3.Dot(VFace, neighbourDirection)*hFace*VFace.x + _g*hFace*hFace*neighbourDirection.x/2;
-        var hvFlux = Vector3.Dot(VFace, neighbourDirection)*hFace*VFace.y + _g*hFace*hFace*neighbourDirection.y/2;
+        var uFlux = -_g*hFace*neighbourDirection.x/2;
+        var vFlux = -_g*hFace*neighbourDirection.y/2;
 
-        return new Vector3(hFlux, huFlux, hvFlux);
+        return new Vector3(hFlux, uFlux, vFlux);
     }
 
     private ISimulableConditions GetConditions(Boundary boundary)
