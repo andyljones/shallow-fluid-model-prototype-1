@@ -8,6 +8,7 @@ public class AtmosphereRenderer<TAtmosphereElement>
     private Atmosphere<TAtmosphereElement> _atmosphere;
 
     private GameObject _atmosphereObject;
+    private LineRenderer[] _lineRenderers;
 
     public AtmosphereRenderer(Atmosphere<TAtmosphereElement> atmosphere)
     {
@@ -22,12 +23,14 @@ public class AtmosphereRenderer<TAtmosphereElement>
 
         UpdateAtmosphereMesh();
         UpdateAtmosphereRenderer();
+        InitializeWind();
     }
 
     public void UpdateAtmosphereObject()
     {
         UpdateAtmosphereMesh();
         //UpdateAtmosphereRenderer();
+        UpdateWind();
     }
 
     private void UpdateAtmosphereMesh()
@@ -51,6 +54,42 @@ public class AtmosphereRenderer<TAtmosphereElement>
         mesh.vertices = helper.Vectors;
         mesh.normals = helper.Normals;
         mesh.triangles = helper.Triangles;
+    }
+
+    private void InitializeWind()
+    {
+        _lineRenderers = new LineRenderer[_atmosphere.Elements.Length];
+
+        foreach (var element in _atmosphere.Elements)
+        {
+            var lineRenderer = new GameObject("Wind Arrow").AddComponent<LineRenderer>();
+
+            lineRenderer.material = (Material) Resources.Load("WindArrows", typeof (Material));
+            lineRenderer.SetWidth(10f, 10f);
+            lineRenderer.SetVertexCount(2);
+            lineRenderer.SetPosition(0, (element.Radius + element.Height) * element.Direction);
+            _lineRenderers[element.Index] = lineRenderer;
+        }
+    }
+
+    private void UpdateWind()
+    {
+        var globalZ = new Vector3(0, 0, 1);
+
+        foreach (var element in _atmosphere.Elements)
+        {
+            var lineRenderer = _lineRenderers[element.Index];
+
+            var localZ = element.Direction.normalized;
+            var localX = Vector3.Cross(localZ, globalZ).normalized; // Points east. I think.
+            var localY = Vector3.Cross(localX, localZ).normalized;
+
+            var origin = (element.Radius + element.Height)*element.Direction;
+            var endpoint = origin + 100*(localX*element.Conditions.V.x + localY*element.Conditions.V.y).normalized;
+            
+            lineRenderer.SetPosition(0, origin);
+            lineRenderer.SetPosition(1, endpoint);
+        }
     }
 
     private void UpdateAtmosphereRenderer()

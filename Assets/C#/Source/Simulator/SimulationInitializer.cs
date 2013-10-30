@@ -70,7 +70,9 @@ public class SimulationInitializer<TAtmosphereElement, TConditions>
 
     private Vector3[] GetNeighbourVectors(TAtmosphereElement element, Vector3 localX, Vector3 localY)
     {
-        return element.Boundaries.Select(boundary => GetNeighbourVector(element, boundary, localX, localY)).ToArray();
+        return element.Boundaries.Where(boundary => boundary.NeighboursIndex != -1)
+                                 .Select(boundary => GetNeighbourVector(element, boundary, localX, localY))
+                                 .ToArray();
     }
 
     private Vector3 GetNeighbourVector(TAtmosphereElement element, Boundary boundary, Vector3 localX, Vector3 localY)

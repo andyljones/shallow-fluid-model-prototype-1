@@ -2,6 +2,8 @@
 
 public interface IRenderableAtmosphereElement
 {
+    int Index { get; }
+
     float Radius { get; }
     
     float Height { get; }
@@ -10,5 +12,7 @@ public interface IRenderableAtmosphereElement
 
     int[] CentralVertexIndices { get; }
 
-    Boundary[] Boundaries { get; }
+    Boundary[] Boundaries { get; } 
+
+    ISimulableConditions Conditions { get; }
 }

@@ -37,12 +37,23 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
 
     public void StepSimulation()
     {
+        for (int step = 0; step < _maxSteps; step++)
+        {
+            foreach (var element in _atmosphere.Elements)
+            {
+                StepSimulation(element);
+            }
+
+            _currentConditions.CopyTo(_oldConditions, 0);
+        }
+
         foreach (var element in _atmosphere.Elements)
         {
-            StepSimulation(element);
+            element.Conditions = _oldConditions[element.Index];
         }
     }
 
+    //TODO: Needs to be tested.
     private void StepSimulation(TAtmosphereElement element)
     {
         var conditions = _oldConditions[element.Index];
@@ -52,7 +63,8 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
         float u1 = conditions.V.x;
         float v1 = conditions.V.y;
 
-        var numberOfNeighbours = element.Boundaries.Length;
+        var nonNullNeighbours = element.Boundaries.Where(boundary => boundary.NeighboursIndex != -1).ToArray();
+        var numberOfNeighbours = nonNullNeighbours.Length;
 
         var diffhu = new Matrix(numberOfNeighbours, 1);
         var diffhv = new Matrix(numberOfNeighbours, 1);
@@ -64,44 +76,48 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
 
         for (int i = 0; i < numberOfNeighbours; i++)
         {
-            var neighbourConditions = GetConditions(element.Boundaries[i]);
+            var neighbourConditions = GetConditions(nonNullNeighbours[i]);
 
             float h2 = neighbourConditions.h;
             float u2 = neighbourConditions.V.x;
             float v2 = neighbourConditions.V.y;
 
-            diffhu[i,1] = h2*u2 - h1*u1;
-            diffhv[i,1] = h2*v2 - h2*v2;
-            diffhuv[i,1] = h2*u2*v2 - h2*u2*v2;
-            diffhu2PlusHalfgh2[i,1] = h2*u2*u2 + 0.5*_g*h2*h2 - h1*u1*u1 + 0.5*_g*h1*h1;
-            diffhv2PlusHalfgh2[i,1] = h2*v2*v2 + 0.5*_g*h2*h2 - h1*v1*v1 + 0.5*_g*h1*h1;
+            diffhu[i,0] = h2*u2 - h1*u1;
+            diffhv[i,0] = h2*v2 - h2*v2;
+            diffhuv[i,0] = h2*u2*v2 - h2*u2*v2;
+            diffhu2PlusHalfgh2[i,0] = h2*u2*u2 + 0.5*_g*h2*h2 - h1*u1*u1 + 0.5*_g*h1*h1;
+            diffhv2PlusHalfgh2[i,0] = h2*v2*v2 + 0.5*_g*h2*h2 - h1*v1*v1 + 0.5*_g*h1*h1;
 
-            A[i, 1] = persistant.NeighbourVectors[i].x;
-            A[i, 2] = persistant.NeighbourVectors[i].y;
+            A[i, 0] = persistant.NeighbourVectors[i].x;
+            A[i, 1] = persistant.NeighbourVectors[i].y;
         }
 
         var dhu = A.Solve(diffhu);
-        var dhudx = dhu[1, 1];
+        var dhudx = dhu[0, 0];
 
         var dhv = A.Solve(diffhv);
-        var dhvdx = dhv[1, 1];
+        var dhvdx = dhv[0, 0];
 
         var dhuv = A.Solve(diffhuv);
-        var dhuvdx = dhuv[1, 1];
-        var dhuvdy = dhuv[2, 1];
+        var dhuvdx = dhuv[0, 0];
+        var dhuvdy = dhuv[1, 0];
 
         var dhu2PlusHalfgh2 = A.Solve(diffhu2PlusHalfgh2);
-        var dhu2PlusHalfgh2dx = dhu2PlusHalfgh2[1, 1];
+        var dhu2PlusHalfgh2dx = dhu2PlusHalfgh2[0, 0];
 
         var dhv2PlusHalfgh2 = A.Solve(diffhv2PlusHalfgh2);
-        var dhv2PlusHalfgh2dy = dhv2PlusHalfgh2[2, 1];
+        var dhv2PlusHalfgh2dy = dhv2PlusHalfgh2[1, 0];
 
-        var newh1 = (float) (h1 - dhudx - dhvdx);
-        var newhu1 = (float) (u1 - dhu2PlusHalfgh2dx - dhuvdy);
-        var newhv1 = (float) (v1 - dhv2PlusHalfgh2dy - dhuvdx);
+        var newh1 = (float) (h1 - (dhudx + dhvdx) * _timestep);
+        var newhu1 = (float) (u1 - (dhu2PlusHalfgh2dx + dhuvdy) * _timestep);
+        var newhv1 = (float) (v1 - (dhv2PlusHalfgh2dy + dhuvdx) * _timestep);
 
-        var newu1 = newhu1/newh1;
-        var newv1 = newhv1/newh1;
+        var f = 0; //element.Direction.z*1f;
+
+        var newu1 = newhu1/newh1 - f * v1;
+        var newv1 = newhv1/newh1 + f * u1;
+
+        if (element.Index == 200) Debug.Log(newh1 + ", " + newu1 + ", " + newv1);
 
         _currentConditions[element.Index] = new TConditions {h = newh1, V = new Vector3(newu1, newv1, 0)};
     }
