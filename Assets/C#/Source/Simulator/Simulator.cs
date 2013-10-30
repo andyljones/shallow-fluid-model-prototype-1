@@ -15,12 +15,14 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
     protected TConditions[] _currentConditions; // Protected rather than private for test purposes.
     protected PersistantInformation[] _persistantInformation; // Protected rather than private for test purposes.
     private float _g;
+    private float _angularVelocity;
 
-    public Simulator(float timestep, int maxStepsPerFrame, float g)
+    public Simulator(float timestep, int maxStepsPerFrame, float g, float angularVelocity)
     {
         _maxSteps = maxStepsPerFrame;
         _timestep = timestep;
         _g = g;
+        _angularVelocity = angularVelocity;
     }
 
     public void InitializeSimulator(Atmosphere<TAtmosphereElement> atmosphere, TConditions initialConditions)
@@ -71,7 +73,7 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
             
         }
 
-        var f = element.Direction.normalized.z*0.001f;
+        var f = element.Direction.normalized.z*_angularVelocity;
 
         var dhdt = F[0];
         var dudt = F[1];
@@ -82,8 +84,6 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
         var v = oldConditions.V.y + (dvdt - f*oldConditions.V.x)*_timestep;
 
         _currentConditions[element.Index] = new TConditions { h = h, V = new Vector3(u, v, 0) };
-
-        if (element.Index == 40) Debug.Log(h + "," + u + "," + v);
     }
 
     private Vector3 FluxThroughFace(Boundary boundary, ISimulableConditions conditions, Vector3 neighbourDirection)
