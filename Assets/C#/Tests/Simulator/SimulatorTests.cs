@@ -133,4 +133,10 @@ public class SimulatorTests
 
         Assert.AreEqual(expectedInformation, actualInformation);
     }
+
+    [TestMethod]
+    public void Simulation_Step_Is_Correct()
+    {
+        _simulator.StepSimulation();
+    }
 }

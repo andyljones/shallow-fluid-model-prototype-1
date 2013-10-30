@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
@@ -56,70 +57,50 @@ public class Simulator<TAtmosphereElement, TConditions> : ISimulator<TAtmosphere
     //TODO: Needs to be tested.
     private void StepSimulation(TAtmosphereElement element)
     {
-        var conditions = _oldConditions[element.Index];
-        var persistant = _persistantInformation[element.Index];
+        var F = new Vector3(0, 0, 0);
 
-        float h1 = conditions.h;
-        float u1 = conditions.V.x;
-        float v1 = conditions.V.y;
+        var oldConditions = _oldConditions[element.Index];
+        var information = _persistantInformation[element.Index];
+        var validBoundaries = element.Boundaries.Where(boundary => boundary.NeighboursIndex != -1).ToArray();
 
-        var nonNullNeighbours = element.Boundaries.Where(boundary => boundary.NeighboursIndex != -1).ToArray();
-        var numberOfNeighbours = nonNullNeighbours.Length;
-
-        var diffhu = new Matrix(numberOfNeighbours, 1);
-        var diffhv = new Matrix(numberOfNeighbours, 1);
-        var diffhuv = new Matrix(numberOfNeighbours, 1);
-        var diffhu2PlusHalfgh2 = new Matrix(numberOfNeighbours, 1);
-        var diffhv2PlusHalfgh2 = new Matrix(numberOfNeighbours, 1);
-
-        var A = new Matrix(numberOfNeighbours, 2);
-
-        for (int i = 0; i < numberOfNeighbours; i++)
+        for (int i = 0; i < validBoundaries.Length; i++)
         {
-            var neighbourConditions = GetConditions(nonNullNeighbours[i]);
+            var boundary = validBoundaries[i];
 
-            float h2 = neighbourConditions.h;
-            float u2 = neighbourConditions.V.x;
-            float v2 = neighbourConditions.V.y;
-
-            diffhu[i,0] = h2*u2 - h1*u1;
-            diffhv[i,0] = h2*v2 - h2*v2;
-            diffhuv[i,0] = h2*u2*v2 - h2*u2*v2;
-            diffhu2PlusHalfgh2[i,0] = h2*u2*u2 + 0.5*_g*h2*h2 - h1*u1*u1 + 0.5*_g*h1*h1;
-            diffhv2PlusHalfgh2[i,0] = h2*v2*v2 + 0.5*_g*h2*h2 - h1*v1*v1 + 0.5*_g*h1*h1;
-
-            A[i, 0] = persistant.NeighbourVectors[i].x;
-            A[i, 1] = persistant.NeighbourVectors[i].y;
+            F -= FluxThroughFace(boundary, oldConditions, information.NeighbourVectors[i].normalized);
+            
         }
 
-        var dhu = A.Solve(diffhu);
-        var dhudx = dhu[0, 0];
+        var f = element.Direction.normalized.z*0.01f;
 
-        var dhv = A.Solve(diffhv);
-        var dhvdx = dhv[0, 0];
+        var dhdt = F[0];
+        var dhudt = F[1];
+        var dhvdt = F[2];
 
-        var dhuv = A.Solve(diffhuv);
-        var dhuvdx = dhuv[0, 0];
-        var dhuvdy = dhuv[1, 0];
+        var h = oldConditions.h + dhdt*_timestep;
+        var hu = oldConditions.V.x + dhudt*_timestep;
+        var hv = oldConditions.V.y + dhvdt*_timestep;
 
-        var dhu2PlusHalfgh2 = A.Solve(diffhu2PlusHalfgh2);
-        var dhu2PlusHalfgh2dx = dhu2PlusHalfgh2[0, 0];
+        var u = (float) (hu/h + f*oldConditions.V.y*_timestep);
+        var v = (float) (hv/h - f*oldConditions.V.x*_timestep);
 
-        var dhv2PlusHalfgh2 = A.Solve(diffhv2PlusHalfgh2);
-        var dhv2PlusHalfgh2dy = dhv2PlusHalfgh2[1, 0];
+        _currentConditions[element.Index] = new TConditions { h = h, V = new Vector3(u, v, 0) };
 
-        var newh1 = (float) (h1 - (dhudx + dhvdx) * _timestep);
-        var newhu1 = (float) (u1 - (dhu2PlusHalfgh2dx + dhuvdy) * _timestep);
-        var newhv1 = (float) (v1 - (dhv2PlusHalfgh2dy + dhuvdx) * _timestep);
+        if (element.Index == 40) Debug.Log(h + "," + u + "," + v);
+    }
 
-        var f = 0; //element.Direction.z*1f;
+    private Vector3 FluxThroughFace(Boundary boundary, ISimulableConditions conditions, Vector3 neighbourDirection)
+    {
+        var neighbourConditions = _oldConditions[boundary.NeighboursIndex];
 
-        var newu1 = newhu1/newh1 - f * v1;
-        var newv1 = newhv1/newh1 + f * u1;
+        var hFace = (conditions.h + neighbourConditions.h)/2;
+        var VFace = (conditions.V + neighbourConditions.V)/2;
 
-        if (element.Index == 200) Debug.Log(newh1 + ", " + newu1 + ", " + newv1);
+        var hFlux = Vector3.Dot(VFace, neighbourDirection)*hFace;
+        var huFlux = Vector3.Dot(VFace, neighbourDirection)*hFace*VFace.x + _g*hFace*hFace*neighbourDirection.x/2;
+        var hvFlux = Vector3.Dot(VFace, neighbourDirection)*hFace*VFace.y + _g*hFace*hFace*neighbourDirection.y/2;
 
-        _currentConditions[element.Index] = new TConditions {h = newh1, V = new Vector3(newu1, newv1, 0)};
+        return new Vector3(hFlux, huFlux, hvFlux);
     }
 
     private ISimulableConditions GetConditions(Boundary boundary)
