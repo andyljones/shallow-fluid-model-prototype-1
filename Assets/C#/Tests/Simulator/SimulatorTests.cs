@@ -75,7 +75,7 @@ public class SimulatorTests
 
         _atmosphere = new Atmosphere<FakeAtmosphericElement>(atmosphereElements, boundaryDirections);
         _conditions = new FakeConditions {h = 10, V = new Vector3(5, -3)};
-        _simulator = new FakeSimulator(0.1f, 10);
+        _simulator = new FakeSimulator(0.1f, 10, 10.0f);
 
         _simulator.InitializeSimulator(_atmosphere, _conditions);
     }
